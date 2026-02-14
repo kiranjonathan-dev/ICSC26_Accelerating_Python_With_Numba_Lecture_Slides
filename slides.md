@@ -10,51 +10,57 @@ layout: cover
 ## Accelerating Python With Numba
 
 
-ICSC 2026
+ICSC 2026, CERN
 
-Kiran Jonathan (Science and Technology Facilities Council, UK)
+Kiran Jonathan (STFC Daresbury Laboratory, UK)
 
 ---
 layout: toc
-maxDepth: 2
 ---
 
 <Toc minDepth="1" maxDepth="2" />
 
 ---
-title: Python is the best
-level: 1
 layout: section
-hideInToc: false
 ---
 
-# Python is the best
+# Myth or truth: how slow is Python, really?
 
 ---
-title: Python is scientist friendly
-level: 2
-layout: center
-hideInToc: false
+layout: default
 ---
 
-## Python is scientist-friendly!
+## Python, a programmer's best friend
 
-- Simple, inuitive syntax
-- Easy to learn, quick to write
-- Support for all kinds of libraries
-- A scientist's best friend!
-
----
-
-## "But, but... Python isn't the best - Python is slow!"
-
-- See this all the time online
-- Plenty of memes, articles, benchmarks
-- But what makes Python slow?
-- Is Python as slow as people say?
+Python is one of the most popular languages in the world, and for good reason:
+- Simple, readable syntax
+- Low barrier of entry
+- Fast to develop and prototype
+- SOOOOO many libraries
+- What more could we need?
 
 ---
 
-# How is Python different from other languages?
+## But "Python is slow, you should use a REAL language"
 
+If you've ever been on the iternet, you've probably seen some programmings complaining about Python's speed
 
+You've probably also seen language comparisons like this
+
+And this
+
+And this
+
+---
+layout: section
+---
+
+# Deep dive: compiled, interpreted, hybrid - what does it all mean?
+
+---
+layout: default
+---
+
+## From code to calculation, how computers actually work
+
+---
