@@ -27,45 +27,28 @@ hideInToc: true
 <Toc minDepth="1" maxDepth="1" />
 
 ---
-layout: section
-color: red
+src: ./sections/python-slow.md
 ---
 
-# Myth Busting: How Slow is Python, Really?
-
 ---
-layout: section
-color: orange
+src: ./sections/compiled-interpreted.md
 ---
 
-# Compiled, Interpreted, Hybrid: What Do They Mean and Why Should We Care?
-
 ---
-layout: section
-color: lime
+src: ./sections/beginner-optimise.md
 ---
 
-# A Beginner's Guide to Optimising Python (Read As: Numpy is Your Best Friend)
-
 ---
-layout: section
-color: cyan
+src: ./sections/numba-intro.md
 ---
 
-# When the Usual Tricks Fail: Introducing Numba, a JIT Compiler for Python
-
 ---
-layout: section
-color: indigo
+src: ./sections/compiled-interpreted.md
 ---
 
-# Going Beyond JIT: Numba for Parallel Programming
-
 ---
-layout: section
-color: fuchsia
+src: ./sections/caution.md
 ---
 
-# A Word of Caution For Your Travels: Numba Can't Solve Everything
-
 ---
+
