@@ -45,7 +45,7 @@ src: ./sections/numba-intro.md
 ---
 
 ---
-src: ./sections/compiled-interpreted.md
+src: ./sections/parallel.md
 ---
 
 ---
