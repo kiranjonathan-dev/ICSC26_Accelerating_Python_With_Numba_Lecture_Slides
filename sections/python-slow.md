@@ -54,20 +54,30 @@ color: red
 
 :: left ::
 
+<v-clicks>
+
 - You've seen the memes
 - You've seen the performance graphs
 - You've seen articles and comments from C++/Rust evangelists
 
-But is true? Is Python really that slow?
+</v-clicks>
 
+<v-click>
+But is true? Is Python really that slow?
+</v-click>
+
+<Tweet url="https://x.com/BenjDicken/status/1861072804239847914"/>
+
+<v-click at=3>
 <iframe
   src="https://jakevdp.github.io/blog/2014/05/09/why-python-is-slow/"
   class="w-full h-[200px] rounded-lg border"
 ></iframe>
-
+</v-click>
 
 :: right ::
 
+<v-click at=1>
 <div class="grid grid-cols-2 gap-4">
 <div class="grid grid-rows-2 gap-4">
   <img src="../images/pam-office-python-slow.jpg" />
@@ -75,6 +85,7 @@ But is true? Is Python really that slow?
 </div>
   <img src="../images/python-slow-cry.jpg" />
 </div>
+</v-click>
 
 ---
 layout: top-title-two-cols
