@@ -127,8 +127,8 @@ java my_code
 <SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
 
 - This time, it's worth remembering that all CPUs speak slightly different languages, everything from French to Malay
-- The compiler rewrites the whole recipe book into some machine-agnostic **intermediate language**, we'll call "Universal Language"
-- The interpreter will read the "Universal Language" version "line-by-line" and translate the instructions to the CPU's language of choice
+- The compiler rewrites the whole recipe book into some machine-agnostic **intermediate language**, we'll call "Lingua Franca"
+- The interpreter will read the "Lingua Franca" version "line-by-line" and translate the instructions to the CPU's language of choice
 
 </SpeechBubble>
 
@@ -199,3 +199,51 @@ You may have even seen some `.pyc` files in your `__pycache__` folder before. Th
 <Admonition title="Info" color="amber-light" width="100%">
 This hidden compilation step is why syntax errors are caught before your program starts, which wouldn't be possible if files were truly read "line-by-line"
 </Admonition>
+
+---
+layout: top-title
+color: orange
+---
+
+:: title ::
+
+## So Python is slow because it's not compiled?
+
+:: content ::
+
+Not quite...
+
+- Interpreted/hybrid languages are typically slower than compiled languages as they have to repeat the effort of translating to machine code in every single run
+- However, Python is still slower than languages with similar-seeming execution models like Java
+- What is causing this additional slowness?
+
+---
+layout: top-title-two-cols
+color: orange
+---
+
+:: title ::
+
+## Dynamic vs Statically Typed Languages
+
+:: left ::
+
+One of the main culprits of Python's slowness is its dynamic typing:
+
+- W
+
+:: right ::
+
+Static typing:
+
+```c++
+int x = 5; // Have to specify type of variables
+x = "Hello"; // Variables can't change type!
+```
+
+Dynamic typing:
+```python
+x = 5
+x = "Hello" # Perfectly fine!
+
+```
