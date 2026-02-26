@@ -15,21 +15,7 @@ Kiran Jonathan (STFC Daresbury Laboratory, UK)
 <Email v="kiran.jonathan@stfc.ac.uk" color="orange" />
 
 ---
-layout: side-title
-color: sky
-hideInToc: true
----
-
-:: title ::
-
-# What we'll be (trying) to cover:
-
-:: content ::
-
-<Toc minDepth="1" maxDepth="1" />
-
----
-src: ./sections/python-slow.md
+src: ./sections/intro.md
 ---
 
 ---
