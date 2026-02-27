@@ -3,7 +3,200 @@ layout: section
 color: orange
 ---
 
-# Compiled, Interpreted, Hybrid: What Do They Mean and Why Should We Care?
+# Is Python Actually Slow? Compiled vs Interpreted and Why You Should Care
+
+---
+layout: top-title-two-cols
+color: orange
+---
+
+:: title ::
+
+## The "Python is Slow" Dogma
+
+:: left ::
+
+<v-click>
+You've seen the memes:
+
+<div class="grid grid-cols-2 gap-4">
+<div class="grid grid-rows-2 gap-4">
+  <img src="../images/pam-office-python-slow.jpg" />
+  <img src="../images/python-sloth.jpg" />
+</div>
+  <img src="../images/python-slow-cry.jpg" />
+</div>
+</v-click>
+
+:: right ::
+
+<v-click>
+
+And the benchmarks:
+
+<img src="../images/python-bench-log.jpg" />
+
+</v-click>
+
+<br>
+
+<v-click>
+
+And plenty of articles, comments, opinions...
+
+But is it true, is Python as slow as they say?
+
+</v-click>
+
+---
+layout: top-title
+color: orange
+---
+
+:: title ::
+
+## The Bad News: Pure Python is Kind of Slow
+
+:: content ::
+
+<v-click>
+
+Let's get this out of the way:
+
+</v-click>
+
+<v-clicks>
+
+- Most "language benchmarks" are sketchy at best (even mine)
+- But they don't all find Python in last place for no reason
+- **Pure Python**, with the **default interpreter** (CPython), is **typically** slower than languages like C++ and Rust
+- In particular, **pure Python** can be quite slow for:
+  - Large or nested loops
+  - Heavy numerical workloads
+
+</v-clicks>
+
+<br>
+
+<v-click>
+
+### Be honest, we've all sat waiting for a Python script at least once
+
+</v-click>
+
+:: right ::
+
+---
+layout: side-title
+color: orange
+---
+
+:: title ::
+
+## But how can this make sense?
+
+
+:: content ::
+
+If Python is slow, why is it the most popular language in the world for machine learning and artificial intelligence?
+
+<img src="../images/Data_center_GettyImages-1480633240.webp"/>
+
+(Read as: the most computationally expensive thing ever)
+
+---
+layout: top-title-two-cols
+color: orange
+---
+
+:: title ::
+
+## The Good News: We Don't Really Need Pure Python
+
+:: left ::
+
+<v-clicks>
+
+The super-power of Python is it's huge community of libraries, written in "fast" languages like Fortran and C/C++. Python simply acts as a user-friendly **glue language**
+
+They let you:
+
+</v-clicks>
+
+<v-clicks>
+
+- Have your compute-heavy workload handled by high-optimised compiled code
+- Maintain the readability and dev speed of Python
+- Benefit from decent performance without knowledge of the intimate details of performance engineering
+
+</v-clicks>
+
+<v-click>
+
+**As long as you're using them properly!**
+
+</v-click>
+
+:: right ::
+
+<v-click at=1>
+
+<img src="../images/AI_libs_transparent.png"/>
+
+</v-click>
+
+<br>
+
+<v-click>
+
+<Admonition title="Your Time Matters!" color="amber-light" width="100%">
+Trade-offs between your time and runtime are very real, a 5% speed-up isn't worth a 2x dev period!
+</Admonition>
+
+</v-click>
+
+---
+layout: top-title-two-cols
+color: orange
+---
+
+:: title ::
+
+## The Great News: With Numba, You Can Even Compile Your Python!
+
+:: left ::
+
+<v-clicks>
+
+Historically, all heavy computation in Python has been handed of the lower-level languages like C/C++, Fortran.
+
+Nowadays, there's been more and more effort put into **compiling** Python, so that we can write native Python code and get C/C++ speed.
+
+We've just seen how **Numba**, a **Just-In-Time (JIT) Compiler** for Python can HUGELY accelerate our code.
+
+</v-clicks>
+
+:: right ::
+
+<v-click at=3>
+
+<img src="../images/numba-blue-horizontal-rgb.svg">
+
+</v-click>
+
+<br>
+<br>
+<br>
+
+<v-click>
+
+<SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
+
+But why does this make things faster? What even is a compiled or interpreted language?
+
+</SpeechBubble>
+
+</v-click>
 
 ---
 layout: top-title
