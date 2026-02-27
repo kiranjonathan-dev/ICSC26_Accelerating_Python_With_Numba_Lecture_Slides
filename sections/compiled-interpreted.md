@@ -49,6 +49,19 @@ But is it true, is Python as slow as they say?
 </v-click>
 
 ---
+layout: side-title
+color: orange
+---
+
+:: title ::
+
+Off to the races, let's show them that Python's not that slow...
+
+:: content ::
+
+<iframe src="https://benjdd.com/languages/" width="80%" height="500px" />
+
+---
 layout: top-title
 color: orange
 ---
@@ -67,7 +80,7 @@ Let's get this out of the way:
 
 <v-clicks>
 
-- Most "language benchmarks" are sketchy at best (even mine)
+- Most "language benchmarks" are sketchy at best (even the ones I'll show you today)
 - But they don't all find Python in last place for no reason
 - **Pure Python**, with the **default interpreter** (CPython), is **typically** slower than languages like C++ and Rust
 - In particular, **pure Python** can be quite slow for:
@@ -168,9 +181,9 @@ color: orange
 
 <v-clicks>
 
-Historically, all heavy computation in Python has been handed of the lower-level languages like C/C++, Fortran.
+Historically, all heavy computation in Python has been handed of the lower-level compiled languages like C/C++, Fortran.
 
-Nowadays, there's been more and more effort put into **compiling** Python, so that we can write native Python code and get C/C++ speed.
+Nowadays, there's been more and more effort put into **compiling** Python itself, so that we can write native Python code and get C/C++ speed.
 
 We've just seen how **Numba**, a **Just-In-Time (JIT) Compiler** for Python can HUGELY accelerate our code.
 
@@ -332,7 +345,7 @@ color: orange
 
 :: title ::
 
-## So, what about Python?
+## So, What About Python?
 
 :: content ::
 
@@ -400,7 +413,7 @@ color: orange
 
 :: title ::
 
-## So Python is slow because it's not compiled?
+## So Python Is Slow Because It's Not Compiled?
 
 :: content ::
 
