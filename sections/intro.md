@@ -17,7 +17,6 @@ Python is one of the most popular languages in the world, and for good reason:
 - Low barrier of entry
 - Fast to develop in and prototype
 - Extensive library support (especially for data analysis/scientific applications)
-- Easy to share and distribute code across platforms
 
 </v-clicks>
 
@@ -53,48 +52,6 @@ author: "Lots of people on the internet"
 
 ## "Python is slow, you should use a real language like C++ or Rust"
 
----
-layout: top-title-two-cols
-color: sky
----
-
-:: title ::
-
-## The "Python is Slow" Dogma
-
-:: left ::
-
-<v-click>
-You've seen the memes:
-
-<div class="grid grid-cols-2 gap-4">
-<div class="grid grid-rows-2 gap-4">
-  <img src="../images/pam-office-python-slow.jpg" />
-  <img src="../images/python-sloth.jpg" />
-</div>
-  <img src="../images/python-slow-cry.jpg" />
-</div>
-</v-click>
-
-:: right ::
-
-<v-click>
-
-And the benchmarks:
-
-<img src="../images/python-bench-log.jpg" />
-
-</v-click>
-
-<br>
-
-<v-click>
-
-And plenty of articles, comments, opinions...
-
-</v-click>
-
-<!-- <Tweet id="1861072804239847914" /> -->
 
 ---
 layout: top-title-two-cols
@@ -103,39 +60,45 @@ color: sky
 
 :: title ::
 
-## The Internet's Model of Programming
+## Speed or Ease: A Scientist's Wager
 
 :: left ::
 
-**Python:**
-
 <v-click>
 
-- Slow
-- For new/un-serious programmers
-- Only suitable as a "scripting language"
-- Not suitable when performance matters
+**Door 1: Python**
 
-</v-click>
-
-<br>
-
-<v-click at=3>
-
-Surely there must be a better way...
+- Extremely fast development
+- Slow run times
+- Probably not suitable for high performance use cases
 
 </v-click>
 
 :: right ::
 
-**Compiled Languages (C/C++, Fortran, Rust):**
+<v-click>
+
+**Door 2: Compiled Languages (C/C++, Fortran, Rust)**
+
+- Longer development times
+- Lightning speed
+- The usual choice where performance matters
+
+</v-click>
+
+:: default ::
 
 <v-click>
 
-- Fast
-- For experienced/serious programmers
-- The only valid choice for "real programs"
-- The greatest thing to happen to the universe
+### Are we always caught in this battle between dev time and run time?
+
+<br>
+
+</v-click>
+
+<v-click>
+
+### Surely there must be a better way!
 
 </v-click>
 
@@ -149,6 +112,10 @@ color: sky
 
 ## I'm here to tell you that you can have your cake and eat it too
 
+<br>
+
+## I'll even show you how...
+
 :: content ::
 
 <img src="../images/python-not-slow.jpg" width="90%">
@@ -161,11 +128,11 @@ color: sky
 
 :: title ::
 
-## Small Changes, Big Performance Gain
+## Today's Goal: Small Changes, Big Gains
 
 :: left ::
 
-<v-click hide>
+<v-click>
 
 ```python
 
@@ -174,24 +141,43 @@ def slow_python(array):
     x[i] = x[i] + 5
 ```
 
+### 28.2 ms
+
 </v-click>
+
+<br>
+
+
+:: right ::
 
 <v-click>
 
-```python {all|1,3}
+```python {1,3}
 @njit(parallel=True)
 def fast_numba(array):
   for i in prange(len(array)):
     x[i] = x[i] + 5
 ```
 
+### 96.2 ns
+
 </v-click>
 
-:: right ::
+<br>
 
 <v-click at=2>
 
 <img src="../images/numba-blue-horizontal-rgb.svg">
+
+</v-click>
+
+:: default ::
+
+<v-click at=3>
+
+## You're not dreaming, that's ~300,000x speedup*
+
+*Actual code speedup really depends on application
 
 </v-click>
 
@@ -203,7 +189,7 @@ hideInToc: true
 
 :: title ::
 
-# By the end of these, we'll have learnt:
+# Our Roadmap to Lightning Fast Python:
 
 :: content ::
 
