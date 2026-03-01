@@ -9,21 +9,25 @@ color: sky
 
 :: content ::
 
-Python is one of the most popular languages in the world, and for good reason:
+<v-click>
+
+Python is **extremely** popular, and for good reason:
+
+</v-click>
 
 <v-clicks>
 
-- Simple, readable syntax
-- Low barrier of entry
-- Fast to develop in and prototype
-- Extensive library support (especially for data analysis/scientific applications)
+- Clean, readable syntax
+- Libraries for everything you can imagine (especially maths and data science)
+- **Easy** to write
+- Stupidly **fast** to develop in
 
 </v-clicks>
 
 <br>
 <v-click>
 
-What more could a programmer ask for?
+But, Python isn't perfect...
 
 </v-click>
 
@@ -34,15 +38,54 @@ color: sky
 
 :: title ::
 
-## Well, if you've ever found yourself in this position
-
-<br>
-
-## You might want to ask for speed...
+## "Fast" and "Python" don't often go together...
 
 :: content ::
 
 <img src="../images/waiting-meme.jpg">
+
+---
+layout: top-title-two-cols
+color: sky
+---
+
+:: title ::
+
+## The "Python is Slow" Dogma
+
+:: left ::
+
+<v-click>
+
+You've seen the memes:
+
+<div class="grid grid-cols-2 gap-4">
+<div class="grid grid-rows-2 gap-4">
+  <img src="../images/pam-office-python-slow.jpg" />
+  <img src="../images/python-sloth.jpg" />
+</div>
+  <img src="../images/python-slow-cry.jpg" />
+</div>
+
+</v-click>
+
+:: right ::
+
+<v-click>
+
+And the benchmarks:
+
+<img src="../images/python-bench-log.jpg" />
+
+</v-click>
+
+<br>
+
+<v-click>
+
+And plenty of articles, comments, opinions...
+
+</v-click>
 
 ---
 layout: quote
@@ -110,16 +153,100 @@ color: sky
 :: title ::
 
 
-## I'm here to tell you that you can have your cake and eat it too
-
-<br>
-
-## I'll even show you how...
+## You can have your cake and eat it too!
 
 :: content ::
 
 <img src="../images/python-not-slow.jpg" width="90%">
 
+
+---
+layout: top-title
+color: sky
+---
+
+:: title ::
+
+## The Bad News: Pure Python is Kind of Slow
+
+:: content ::
+
+<v-click>
+
+Let's rip the band-aid:
+
+</v-click>
+
+<v-clicks>
+
+- Most "language benchmarks" are sketchy at best (even the ones I'll show you today)
+- But they don't find Python in last place for no reason
+- **Pure Python**, with the **default interpreter** (CPython), is **typically** slower than compiled languages like C++ and Rust
+- In particular, **pure Python** can be quite slow for:
+  - Large or nested loops
+  - Heavy numerical workloads
+
+</v-clicks>
+
+<br>
+
+<v-click>
+
+### Be honest, we've all sat waiting for a Python script at least once
+
+</v-click>
+
+:: right ::
+
+---
+layout: top-title-two-cols
+color: sky
+---
+
+:: title ::
+
+## The Good News: You Can Run Fast, Compiled Code Without Writing a Line of C/C++/Fortran
+
+:: left ::
+
+<v-clicks>
+
+We don't have to rewrite our code in C/C++/Fortran!
+
+Python offers two great options for fast, compiled code:
+
+</v-clicks>
+
+<v-clicks>
+
+- Use Python as a **glue** for the **fast, compiled** code other people have written
+  - See: **Numpy**, Scipy, and all of the ML libs
+- Or actually compile your own Python into lightning fast machine code!
+  - See: PyPI, Cython, and **Numba**
+
+</v-clicks>
+
+<v-click>
+
+**Today, we'll learn how to make the most of both!**
+
+</v-click>
+
+:: right ::
+
+<v-click at=3>
+
+<img src="../images/AI_libs_transparent.png"/>
+
+</v-click>
+
+<br>
+
+<v-click at=4>
+
+<img src="../images/numba-blue-horizontal-rgb.svg" />
+
+</v-click>
 
 ---
 layout: top-title-two-cols
