@@ -27,6 +27,10 @@ src: ./sections/beginner-optimise.md
 ---
 
 ---
+src: ./sections/numpy-tut.md
+---
+
+---
 src: ./sections/numba-intro.md
 ---
 
