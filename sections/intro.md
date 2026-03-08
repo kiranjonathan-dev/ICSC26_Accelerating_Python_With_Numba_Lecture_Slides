@@ -220,7 +220,7 @@ Python offers two great options for fast, compiled code:
 <v-clicks>
 
 - Use Python as a **glue** for the **fast, compiled** code other people have written
-  - See: **Numpy**, Scipy, and all of the ML libs
+  - See: **Numpy**, Scipy, and all the ML libs
 - Or actually compile your own Python into lightning fast machine code!
   - See: PyPI, Cython, and **Numba**
 
@@ -316,7 +316,7 @@ hideInToc: true
 
 :: title ::
 
-# Our Roadmap to Lightning Fast Python:
+# Our Road Map to Lightning Fast Python:
 
 :: content ::
 
