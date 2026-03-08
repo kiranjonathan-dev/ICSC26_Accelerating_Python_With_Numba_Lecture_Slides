@@ -6,80 +6,183 @@ color: lime
 # A Beginner's Guide to Optimisation
 
 ---
-layout: top-title
+layout: side-title
 color: lime
+---
+
+:: title ::
+
+## My Personal Approach To Optimisation:
+
+:: content ::
+
+```mermaid {scale: 0.8}
+flowchart TD
+    A(1. Set Performance Goals) --> B(2. Make Correctness Tests)
+    B --> C(3. Measure and Profile)
+    C --> D(4. Optimise Hotspots)
+    D -->|Once Correct|F(5. Performance Goals Met?)
+    F -->|No|C
+    F -->|Yes|G([Congratulations!])
+```
+
+---
+layout: top-title-two-cols
+color: lime
+columns: is-8
 ---
 
 :: title ::
 
 ## Step 1: Set Performance Goals
 
-:: content ::
+:: left ::
 
-Why are you optimising your code?
-- To show off how fast it runs?
-- Is it limiting your ability to do your job?
-- Would speeding it up let you explore more of the problem?
+**Why are you optimising your code?**
+- So that you can meet your deadlines?
+- So you can run more simulations/analysis?
 
-Set a concrete target:
+**Set a concrete target:**
 - ~~I want my code to run 300x faster~~
-- I'd love this script to finish in 10 minutes
-- Make sure your goal is achievable! Just because one ideal function can go 300x, doesn't mean your whole codebase can!
+- It would be great if this script was <20 minutes
 
-If you don't set targets up front, you'll never know when to stop!
+<br>
+
+**Make sure your goal is achievable!**
+
+**Just because you can 300x one ideal function, doesn't mean you can for your whole codebase!** 
+
+:: right ::
+
+```mermaid {scale: 0.65}
+flowchart TD
+    subgraph  
+      A
+    end
+    A(1. Set Performance Goals) --> B(2. Make Correctness Tests)
+    B --> C(3. Measure and Profile)
+    C --> D(4. Optimise Hotspots)
+    D -->|Once Correct|F(5. Performance Goals Met?)
+    F -->|No|C
+    F -->|Yes|G([Congratulations!])
+```
 
 ---
-layout: top-title
+layout: top-title-two-cols
 color: lime
+columns: is-8
 ---
 
 :: title ::
 
-## Step 2: Make Sure You've Got Tests
+## Step 2: Make Correctness Tests
 
-:: content ::
+:: left ::
 
-Correctness is always more important than speed:
-- Fundamentally, you'll be changing lots of your code
-- If you don't have a way to check it's still correct, you'll have a bad time
-- Unit tests are ideal, but often not available in scientific scenarios
-- At least put together some representative runs with known **good** inputs/outputs that you can compare to
+**Correctness > Speed, Always:**
+- Optimisation = changing your code
+- If you can't check it's still correct, you'll have a bad time
+- Unit tests are ideal, but often not available
+- At least make some end-to-end runs with **known good input/outputs** to compare to!
 
+<br>
 
-<Admonition title="Info" color="amber-light" width="100%">
-Remember! Floating point numbers aren't real, and optimisations may give slightly different, but still correct results.
+<Admonition title="Floating Point Numbers Aren't Real!" color="amber-light" width="100%">
+Optimised code may not give exactly the same results, but that doesn't mean it's wrong!
 
-Numpy has a great testing module, and the method `np.testing.assert_all_close` is a great way to check the correctness of your optimised code against your reference!
+`np.testing.assert_all_close` (and the rest of `numpy.testing`) is your new best friend
 </Admonition>
 
+:: right ::
+
+```mermaid {scale: 0.65}
+flowchart TD
+    A(1. Set Performance Goals) --> B(2. Make Correctness Tests)
+    subgraph  
+      B
+    end
+    B --> C(3. Measure and Profile)
+    C --> D(4. Optimise Hotspots)
+    D -->|Once Correct|F(5. Performance Goals Met?)
+    F -->|No|C
+    F -->|Yes|G([Congratulations!])
+```
 ---
-layout: top-title
+layout: top-title-two-cols
 color: lime
+columns: is-8
 ---
 
 :: title ::
 
-## Step 3: Measure, Measure, Measure
+## Step 3: Measure and Profile
 
-:: content ::
+:: left ::
 
-I promise you that you will not correctly guess which part of your code is the slowest
+**Before you can speed things up, you need to know what's slowing things down:**
+- You can't guess this, you need to **measure**
+- Use a **profiler** to find which functions (or even which lines) are slowing you down!
+- For this, you need a representative run:
+  - Your unit tests will not make good performance tests!
+  - You need a few end-to-end tests with realistic input sizes to properly profile your code
 
-The first practical step for benchmarking is profiling your code:
-- Try to identify which functions/specific operations are taking up most of your run time
-- Unit tests (if you have them) are a good starting point, but should **not** be your drop in performance tests
-  - They usually have small inputs to run quickly, they will not show you your true hotspots!
-- Make sure you use a decent profiler, for Python I can recommend:
-  - CProfile (built in) with SnakeViz (pip install) to visualise profiling results
-  - line_profiler (pip install)
-- `%timeit` in a Jupyter notebook is great for small code snippets!
+:: right ::
 
-<Admonition title="Prioritise!" color="amber-light" width="100%">
-When using your profiler, check which functions/lines take up a majority of your runtime (by total time/percentage).
+```mermaid {scale: 0.65}
+flowchart TD
+    A(1. Set Performance Goals) --> B(2. Make Correctness Tests)
+    B --> C(3. Measure and Profile)
+    subgraph  
+      C
+    end
+    C --> D(4. Optimise Hotspots)
+    D -->|Once Correct|F(5. Performance Goals Met?)
+    F -->|No|C
+    F -->|Yes|G([Congratulations!])
+```
 
-These are the ones you focus on! Speeding up the function that takes up 90% of your run time by 1.5x is WAY better than speeding up a function that takes up 5% of your runtime 100,000x
+---
+layout: top-title-two-cols
+color: lime
+columns: is-8
+---
+
+:: title ::
+
+## Step 3: Measure and Profile - Prioritise!
+
+:: left ::
+
+**Don't waste your time on the small gains:**
+- When profiling, **percentage of total runtime** is the only thing that matters
+- If a function only takes 5% of your runtime, you can optimise it 1,000,000x and still only save <5% of your runtime
+- Always start with the biggest chunk of your runtime!
+
+<br>
+
+<Admonition title="A Bit More Formally: Amdahl's Law" color="amber-light" width="100%">
+
+Speedup of the whole program, $S_{tot}$, is determined by speedup of individual process, $S_{proc}$, and the fraction of the runtime that process takes, $f_{proc}$:
+
+### $S_{tot} = \frac{1}{(1-f_{proc}) + \frac{f_{proc}}{S_{proc}}}$ 
+
 </Admonition>
 
+:: right ::
+
+```mermaid {scale: 0.65}
+flowchart TD
+    A(1. Set Performance Goals) --> B(2. Make Correctness Tests)
+    B --> C(3. Measure and Profile)
+    subgraph  
+      C
+    end
+    C --> D(4. Optimise Hotspots)
+    D -->|Once Correct|F(5. Performance Goals Met?)
+    F -->|No|C
+    F -->|Yes|G([Congratulations!])
+```
+
 ---
 layout: top-title
 color: lime
@@ -87,39 +190,151 @@ color: lime
 
 :: title ::
 
-## Step 4: Optimise the Hotspots
+## Aside: Profilers for Python
 
 :: content ::
 
-Once you know which parts of your code are eating up your runtime, start optimising (again, always start with what's taking up the most of your typical run!).
+There are a **huge** number of profilers for Python
+
+Personally, I'd recommend starting with the basics:
+  - `CProfile` (built-in) 
+    - Perfect for identifying **hot functions**
+    - Combine with `SnakeViz` (pip install) to visualise text output as a graph
+  - `line_profiler` (pip install)
+    - Great when you need a bit more detail on a function
+    - Ideally your functions are small enough not to need this!
+- `%timeit` (one line) and `%%timeit` (whole cell) in Jupyter notebooks are a great starting point!
+  - Perfect for direct comparisons of small functions (as we'll use in the exercises)
+
+---
+layout: top-title-two-cols
+color: lime
+columns: is-5
+---
+
+:: title ::
+
+## Aside: Profilers for Python (Example)
+
+:: left ::
+
+sleep_example.py
+
+```python
+from time import sleep
+
+def sleep_1():
+  sleep(1) # Pause code for 1 second
+
+def sleep_2():
+  sleep(2) # Pause code for 2 seconds
+
+for i in range(8):
+  sleep_1() # Called 8 times
+
+sleep_2() # Called once
+```
+
+Profile with:
+```sh
+# First run CProfile (can be done in code, instead)
+python3 -m cProfile -o profile.out sleep_example.py
+
+# Then use SnakeViz to visualise the output
+snakeviz profile.out
+```
+
+:: right ::
+
+`SnakeViz` Output:
+
+<img src="../images/snakeviz-example.png" />
+
+Slowest individual function is `sleep_2` (in red)
+
+But, `sleep_1` (the widest function) is killing our runtime (8s vs 2s)
+
+**Always start with the widest function! `sleep_1` is the real culprit here!**
+
+---
+layout: top-title-two-cols
+color: lime
+columns: is-8
+---
+
+:: title ::
+
+## Step 4: Optimise Hotspots
+
+:: left ::
+
+We've found the slow part of the code, it's time to make it go faster!
 
 There are two key approaches:
-- Identify algorithmic/datastructure improvements:
-  - These are where the biggest saves come from, not from code optimisation!
-  - e.g. moving from a naive sort to a bubble sort would be better than hyper-optimising your naive sort!
-- Once you're confident you've got the algorithm, start working on the code:
-  - See what parts of the code you can offload to optimised libraries like numpy, scipy, etc...
-  - Try to optimise the rest by hand (cough, cough - Numba!)
+- **Algorithm/data structure improvements:**
+  - Always where the real time saves come from!
+  - e.g. moving from naive search to binary search
+- **Numerical/code optimisation (today's topic):**
+  - Offloading to optimised libraries like `NumPy`, `SciPy`, etc...
+  - Manually optimising the code (cough, cough - `Numba`!)
+
+
+<Admonition title="Don't Forget to Test!" color="red-light" width="100%">
+
+**It's only an optimisation if it's still correct, test after each change!**
+
+</Admonition>
+
+:: right ::
+
+```mermaid {scale: 0.65}
+flowchart TD
+    A(1. Set Performance Goals) --> B(2. Make Correctness Tests)
+    B --> C(3. Measure and Profile)
+    C --> D(4. Optimise Hotspots)
+    subgraph  
+      D
+    end
+    D -->|Once Correct|F(5. Performance Goals Met?)
+    F -->|No|C
+    F -->|Yes|G([Congratulations!])
+```
 
 ---
-layout: top-title
+layout: top-title-two-cols
 color: lime
+columns: is-8
 ---
 
 :: title ::
 
 ## Step 5: Check if You're Finished!
 
-:: content ::
+:: left ::
 
 After each function/major line optimisation, check two things:
 - Is my code still correct?
- - Remember, `np.testing.assert_all_close` is your friend!
-- Have I met my perfomance goal?
- - It's important to know when to stop!
- - Dimishing returns exist, at some point it's not worth more of your dev time
+  - Remember, `np.testing.assert_all_close` is your friend!
+- Have I met my performance goal?
+  - It's important to know when to stop!
+  - Diminishing returns exist, at some point it's not worth more of your dev time
 
 If you're not finished, profile your code again, identify the hotspots, and get back to it!
+
+:: right ::
+
+```mermaid {scale: 0.65}
+flowchart TD
+    A(1. Set Performance Goals) --> B(2. Make Correctness Tests)
+    B --> C(3. Measure and Profile)
+    C --> D(4. Optimise Hotspots)
+    D -->|Once Correct|F(5. Performance Goals Met?)
+    subgraph  
+      F
+      F -->|Yes|G([Congratulations!])
+    end
+    F -->|No|C
+```
 
 ---
 layout: top-title
