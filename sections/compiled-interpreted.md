@@ -80,7 +80,9 @@ I'm a CPU, and I speak **machine code**
 <v-click at=4>
 
 <Admonition title="Important!" color="amber-light" width="100%">
+
 There is no single machine code, the language depends on your specific CPU (x86/ARM/etc...) and your OS (Windows/Linux/Mac)
+
 </Admonition>
 
 </v-click>
@@ -247,7 +249,9 @@ You may have even seen some `.pyc` files in your `__pycache__` folder before. Th
 <br>
 
 <Admonition title="Fun Fact" color="amber-light" width="100%">
-You can even "disassemble" your python code into a human-readable analogue of its bytecode with `python -m dis my_code.py`
+
+You can even "disassemble" your python code into a human-readable analogue of its bytecode with <br> `python -m dis my_code.py`
+
 </Admonition>
 
 ---
@@ -324,7 +328,9 @@ x = "Hello" # Perfectly fine to change! (dynamic)
 <br>
 
 <Admonition title="Info" color="amber-light" width="100%">
+
 This is why strongly, statically typed compiled languages are so much faster! They check all of this and make all of these decisions at compile time. This is also why they're able to give helpful errors at compile time, instead of runtime (Rust is infamous for its comprehensive compile-time errors).
+
 </Admonition>
 
 ---
