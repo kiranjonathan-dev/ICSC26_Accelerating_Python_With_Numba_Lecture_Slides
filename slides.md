@@ -31,6 +31,19 @@ src: ./sections/numpy-tut.md
 ---
 
 ---
+layout: section
+color: sky
+---
+
+# Break Time! Q&A and Short Rest
+
+15 minutes for water refills, bathroom breaks, and any questions on the content so far
+
+<br>
+
+### When we're back - it's Numba time!
+
+---
 src: ./sections/numba-intro.md
 ---
 
