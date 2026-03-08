@@ -43,6 +43,14 @@ color: sky
 
 ### When we're back - it's Numba time!
 
+<br>
+<br>
+<br>
+<br>
+
+**Hungry for more NumPy optimisations while you wait?**
+<Link to="numpy-tips" title="Bonus NumPy Tips and Tricks" />
+
 ---
 src: ./sections/numba-intro.md
 ---
