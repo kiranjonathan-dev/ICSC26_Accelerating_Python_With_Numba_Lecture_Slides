@@ -142,7 +142,7 @@ The general idea is as follows:
 
 - Instead of the language having a **compiler**, it will have an **executable** known as the **interpreter**
 - The **interpreter** essentially reads your code "line-by-line", understands what you're trying to do, and asks the CPU to perform the relevant operation
-- Common examples of interpreted languages are Python, Javascript, Ruby, and Perl
+- Common examples of interpreted languages are Python, JavaScript, Ruby, and Perl
 
 ```bash
 # No compilation step, just run a Javascript interpreter like
@@ -263,7 +263,7 @@ color: orange
 
 Not quite...
 
-- As we've covered, compiled languages are typically faster tha interpreted languages like Python
+- As we've covered, compiled languages are typically faster than interpreted languages like Python
 - However, Python is still slower than languages with similar-seeming execution models like Java
 - What is causing this additional slowness?
 
@@ -334,7 +334,7 @@ color: orange
 
 :: title ::
 
-## Now we know why Python's slow, how can we make our's faster?
+## Now we know why Python's slow, how can we make ours faster?
 
 :: content ::
 
