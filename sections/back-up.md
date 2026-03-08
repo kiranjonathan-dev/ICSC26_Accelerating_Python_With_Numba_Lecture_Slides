@@ -125,10 +125,12 @@ x_array = np.arange(1000)
 # Memory hog - 3x the data
 y_array = x_array * 5
 z_array = y_array + 10
+sin_array = np.sin(z_array)
 
 # Ideal - only 1 array!
 x_array *= 5
 x_array += 10
+np.sin(x_array, out=x_array) # out let's you specify the target output
 ```
 
 This is purely from a memory optimisation perspective, do not sacrifice readability if your performance is already good enough!
