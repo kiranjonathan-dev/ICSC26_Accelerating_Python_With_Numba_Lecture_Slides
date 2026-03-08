@@ -265,10 +265,10 @@ color: sky
 
 def slow_python(array):
   for i in range(len(array)):
-    x[i] = x[i] + 5
+    array[i] += 5
 ```
 
-### 28.2 ms
+### 1.23s
 
 </v-click>
 
@@ -279,14 +279,14 @@ def slow_python(array):
 
 <v-click>
 
-```python {1,3}
+```python
 @njit(parallel=True)
 def fast_numba(array):
   for i in prange(len(array)):
-    x[i] = x[i] + 5
+    array[i] += 5
 ```
 
-### 96.2 ns
+### 3.24ms
 
 </v-click>
 
@@ -302,9 +302,9 @@ def fast_numba(array):
 
 <v-click at=3>
 
-## You're not dreaming, that's ~300,000x speedup*
+## You're not dreaming, that's ~380x speedup for zero effort*
 
-*Actual code speedup really depends on application
+*For this ideal toy example :)
 
 </v-click>
 
