@@ -67,3 +67,7 @@ color: sky
 
 Can't think of any right now? Feel free to reach out to me after the session:
 <Email v="kiran.jonathan@stfc.ac.uk" color="orange"/>
+
+---
+src: ./sections/back-up.md
+---
