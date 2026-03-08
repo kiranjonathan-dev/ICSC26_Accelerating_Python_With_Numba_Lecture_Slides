@@ -237,7 +237,95 @@ color: yellow
 
 :: left ::
 
+## Naive Python Mean
+
+```python
+def naive_mean(x_list):
+  sum = 0
+  for x in x_list:
+    sum += x
+  mean = sum / len(x_list)
+  return mean
+```
+
+### 18ms
+
 :: right ::
+
+## Vectorised NumPy Mean
+
+```python
+def numpy_mean(x_array):
+  return x_array.mean()
+```
+
+### 1.8μs
+
+:: default ::
+
+### I wasn't kidding about speed, that's **10,000x speedup** for 1,000,000 elements
+
+<br>
+
+### I also wrote less code, and it's easier to read!
+
+---
+layout: top-title-two-cols
+color: yellow
+---
+
+:: title ::
+
+## NumPy's Performance Edge (From Optimised Compilation)
+
+:: left ::
+
+### Contiguous Memory = Cache Prefetching
+
+Your CPU/OS is really smart
+
+Let's say you're accessing `A0`, then `A1`, then `A2` and `A3` from this memory block:
+
+```python
+[A0, A1, A2, A3, A4, A5, ...]
+```
+
+It'll see that it's a regular access pattern and start peaking ahead!
+
+It will then load `[A4, ...]` in chunks for you
+
+This can save a lot of time where your CPU is waiting for the next piece of memory to operate on!
+
+
+:: right ::
+
+### Vector Operations = SIMD
+
+Old CPU's could only perform one binary operation at a time:
+```python
+[1, 2, 3, 4, 5, 6, 7, 8] + [9, 10, 11, 12, 13, 14, 15]
+===
+1+9
+2+10
+...
+8+16
+# 8 CPU Cycles
+```
+
+Modern CPUs can operate as SIMD (Single Instruction, Multiple Data)
+```python
+[1, 2, 3, 4, 5, 6, 7, 8] + [9, 10, 11, 12, 13, 14, 15, 16]
+===
+[1, 2, 3, 4] + [9, 10, 11, 12] 
+[5, 6, 7, 8] + [13, 14, 15, 18]
+# 2 CPU Cycles
+```
+
+<!-- SIMD: -->
+<!-- NumPy isn't just fast because it's compiled, every rule contributes: -->
+<!-- - Contiguous memory from NumPy arrays allows the CPU to pre-fetch memory when NumPy loops under the hood -->
+<!-- - NumPy's vectorised operations make use of SIMD (Single Instruction, Multiple Data) -->
+<!--   - Modern CPUs can perform the same operation on multiple pieces of data at the same time! -->
 
 ---
 layout: top-title
@@ -250,360 +338,14 @@ color: yellow
 
 :: content ::
 
----
-layout: top-title
-color: yellow
----
+We've seen that NumPy is the **champion** of vector operations, but can all algorithms be vectorised?
 
-<Link to="numpy-tips" title="Bonus NumPy Tips and Tricks" />
+Sadly no. What can we do when algorithms depend on previous values:
+- Recursive functions (e.g. Fibonacci Series)
+- Time series where values depend on previous timestep (e.g. numerical integration)
 
+Basically, any for loop where you're not only accessing `x[i]`, but also `x[i-1]` or `x[i+1]` or any `x[j != i]`
 
----
+<br>
 
-# Writing Fast Scientific Code with NumPy
-
-Practical tips first  
-Then: why they work
-
----
-
-# The Key Idea
-
-Slow scientific Python often looks like this:
-
-```python
-result = []
-for i in range(len(a)):
-    result.append(a[i] * b[i])
-````
-
-Fast NumPy code looks like this:
-
-```python
-result = a * b
-```
-
-Rule of thumb:
-
-> **Operate on arrays, not elements**
-
----
-
-# Practical Tip 1: Avoid Python Loops
-
-❌ Python loop
-
-```python
-c = np.empty(len(a))
-
-for i in range(len(a)):
-    c[i] = a[i] + b[i]
-```
-
-✅ NumPy vectorized operation
-
-```python
-c = a + b
-```
-
-Advantages:
-
-* fewer Python instructions
-* optimized C implementation
-* enables SIMD instructions
-
----
-
-# Practical Tip 2: Use Broadcasting
-
-Broadcasting applies operations across arrays automatically.
-
-```python
-a = np.arange(5)
-b = 10
-
-result = a + b
-```
-
-Conceptually:
-
-```text
-[0 1 2 3 4]
-+
-[10 10 10 10 10]
-```
-
-But NumPy **does not actually copy the data**.
-
----
-
-# Broadcasting Example
-
-```mermaid
-flowchart LR
-    A["Array A<br>[0 1 2 3 4]"]
-    B["Scalar B<br>10"]
-    C["Broadcast<br>[10 10 10 10 10]"]
-    D["Result<br>[10 11 12 13 14]"]
-
-    A --> D
-    B --> C --> D
-```
-
-Broadcasting avoids loops **and** avoids extra memory.
-
----
-
-# Practical Tip 3: Preallocate Arrays
-
-Avoid repeated allocations.
-
-❌ Slow
-
-```python
-arr = np.array([])
-
-for i in range(10000):
-    arr = np.append(arr, i)
-```
-
-✅ Faster
-
-```python
-arr = np.empty(10000)
-
-for i in range(10000):
-    arr[i] = i
-```
-
-Allocate memory **once**, then fill it.
-
----
-
-# Practical Tip 4: Use NumPy Built-ins
-
-Many NumPy functions call highly optimized libraries.
-
-Examples:
-
-```python
-np.sum(a)
-np.mean(a)
-np.dot(a, b)
-np.linalg.solve(A, b)
-```
-
-These often use optimized BLAS implementations.
-
----
-
-# Summary So Far
-
-Fast NumPy code:
-
-* Avoid Python loops
-* Use vectorized operations
-* Use broadcasting
-* Preallocate arrays
-* Prefer built-in NumPy functions
-
-Now the question:
-
-> **Why are these operations so fast?**
-
----
-
-# Why NumPy Is Fast
-
-Three major reasons:
-
-1. **Vectorization**
-2. **SIMD instructions**
-3. **Contiguous memory layout**
-
-These allow the CPU to process large arrays efficiently.
-
----
-
-# Vectorization
-
-Vectorization means applying one operation to **many values at once**.
-
-Instead of:
-
-```python
-for i in range(n):
-    c[i] = a[i] + b[i]
-```
-
-NumPy internally performs something like:
-
-```
-vector_add(a, b)
-```
-
-The loop happens **inside compiled C code**, not Python.
-
----
-
-# Vectorized Execution
-
-```mermaid
-flowchart LR
-    P["Python Code<br>a + b"]
-    C["NumPy C Loop"]
-    CPU["CPU Vector Instructions"]
-    R["Result Array"]
-
-    P --> C
-    C --> CPU
-    CPU --> R
-```
-
-This removes Python overhead and allows low-level optimizations.
-
----
-
-# SIMD: Single Instruction Multiple Data
-
-Modern CPUs can process multiple numbers **in a single instruction**.
-
-Example:
-
-```
-a = [1 2 3 4]
-b = [5 6 7 8]
-```
-
-Instead of:
-
-```
-1+5
-2+6
-3+7
-4+8
-```
-
-SIMD can compute:
-
-```
-[1 2 3 4] + [5 6 7 8]
-```
-
-in **one CPU instruction**.
-
----
-
-# SIMD Concept
-
-```mermaid
-flowchart LR
-    A["Vector A<br>[1 2 3 4]"]
-    B["Vector B<br>[5 6 7 8]"]
-    C["SIMD Add Instruction"]
-    D["Result<br>[6 8 10 12]"]
-
-    A --> C
-    B --> C
-    C --> D
-```
-
-NumPy operations can leverage these instructions internally.
-
----
-
-# Contiguous Memory
-
-NumPy arrays store data in **continuous blocks of memory**.
-
-```mermaid
-flowchart LR
-    A0["a0"]
-    A1["a1"]
-    A2["a2"]
-    A3["a3"]
-    A4["a4"]
-
-    A0 --> A1 --> A2 --> A3 --> A4
-```
-
-Advantages:
-
-* fast sequential access
-* efficient CPU caching
-* easy SIMD loading
-
----
-
-# Python Lists vs NumPy Arrays
-
-Python list memory:
-
-```mermaid
-flowchart LR
-    L0["ptr"] --> O0["object"]
-    L1["ptr"] --> O1["object"]
-    L2["ptr"] --> O2["object"]
-```
-
-NumPy array memory:
-
-```mermaid
-flowchart LR
-    N0["1.0"] --> N1["2.0"] --> N2["3.0"] --> N3["4.0"]
-```
-
-Lists store **pointers to objects**.
-NumPy stores **raw numeric data**.
-
----
-
-# Cache Locality
-
-CPUs read memory in **cache lines (~64 bytes)**.
-
-Contiguous arrays allow the CPU to fetch many values at once.
-
-```mermaid
-flowchart LR
-    C["Cache Line"]
-    A1["a0"]
-    A2["a1"]
-    A3["a2"]
-    A4["a3"]
-
-    C --> A1
-    C --> A2
-    C --> A3
-    C --> A4
-```
-
-This dramatically improves performance.
-
----
-
-# Final Takeaways
-
-Practical rules:
-
-1. Think in **arrays**
-2. Avoid **Python loops**
-3. Use **vectorized operations**
-4. Use **broadcasting**
-5. Prefer **NumPy built-ins**
-
-These work because NumPy leverages:
-
-* SIMD
-* contiguous memory
-* compiled loops
-
----
-
-# Thank You
-
-Questions?
-
-```
-```
-
+**Surely we're not stuck with a pure Python for loop?**
