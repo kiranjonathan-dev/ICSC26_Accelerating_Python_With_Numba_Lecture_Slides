@@ -183,7 +183,8 @@ These optimisations will try to understand what your code is doing, and restruct
 - Loop optimisations
 - Memory and cache optimisations
 - Control flow and function optimisations
-- So, so much more
+- <Link to="compiler-optimisations" title="So, so much more" />
+
 
 ---
 layout: side-title

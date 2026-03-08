@@ -9,6 +9,14 @@ color: red
 ---
 layout: section
 color: red
+routeAlias: compiler-optimisations
+---
+
+## Compiler Optimisation Examples
+
+---
+layout: section
+color: red
 routeAlias: numpy-tips
 ---
 
