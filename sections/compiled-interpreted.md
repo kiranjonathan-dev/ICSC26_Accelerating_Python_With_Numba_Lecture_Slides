@@ -230,7 +230,7 @@ python my_code.py
 
 Actually runs more like:
 ```bash
-# Compilation to machine-agnostic Python bytecode
+# Translation to machine-agnostic Python bytecode
 python -m py_compile my_code.py
 # Interpretation of Python bytecode
 python my_code.pyc
@@ -242,9 +242,8 @@ You may have even seen some `.pyc` files in your `__pycache__` folder before. Th
 
 <SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
 
-- Python's compilation is not the same as C/C++/Fortran's
+- Python may translate to bytecode, but it's "compilation" is not like C/C++/Rust
 - It is not intensely optimising and it does not produce machine code
-- It mostly acts to separate the parsing of the language from the actual execution of the instructions
 
 </SpeechBubble>
 
@@ -329,9 +328,13 @@ x = "Hello" # Perfectly fine to change! (dynamic)
 
 <br>
 
-<Admonition title="Info" color="amber-light" width="100%">
+<Admonition title="The Compiled Advantage" color="amber-light" width="100%">
 
-This is why strongly, statically typed compiled languages are so much faster! They check all of this and make all of these decisions at compile time. This is also why they're able to give helpful errors at compile time, instead of runtime (Rust is infamous for its comprehensive compile-time errors).
+<!-- This is why strongly, statically typed compiled languages are so much faster! They check all of this and make all of these decisions at compile time. This is also why they're able to give helpful errors at compile time, instead of runtime (Rust is infamous for its comprehensive compile-time errors). -->
+
+C/C++/etc... not only know the types of your variable, but they make all of these decisions ahead of time during compilation!
+
+Having all of this information is how they're able to optimise so aggressively!
 
 </Admonition>
 
