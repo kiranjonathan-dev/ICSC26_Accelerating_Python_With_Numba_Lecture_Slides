@@ -56,6 +56,14 @@ def hello_world():
 
 </v-click>
 
+<br>
+
+<v-click at=1>
+
+### Programming languages all ultimately try to solve the same problem
+
+</v-click>
+
 :: right ::
 
 <v-click at=3>
@@ -75,7 +83,7 @@ I'm a CPU, and I speak **machine code**
 
 </v-click>
 
-<hr style="height:10px; visibility:hidden;" />
+<br>
 
 <v-click at=4>
 
@@ -87,13 +95,6 @@ There is no single machine code, the language depends on your specific CPU (x86/
 
 </v-click>
 
-:: default ::
-
-<v-click at=1>
-
-### Programming languages all ultimately try to solve the same problem
-
-</v-click>
 
 ---
 layout: top-title-two-cols
@@ -284,7 +285,7 @@ color: orange
 
 :: content ::
 
-<img src="../images/static-dynamic-meme.jpeg" />
+<img src="../images/static-dynamic-meme.jpeg" width="75%" />
 
 ---
 layout: top-title-two-cols
@@ -344,4 +345,4 @@ color: orange
 
 :: content ::
 
-<img src="../images/slow-to-fast.jpg">
+<img src="../images/slow-to-fast.jpg" width="80%">
