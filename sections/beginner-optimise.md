@@ -72,6 +72,7 @@ The first practical step for benchmarking is profiling your code:
 - Make sure you use a decent profiler, for Python I can recommend:
   - CProfile (built in) with SnakeViz (pip install) to visualise profiling results
   - line_profiler (pip install)
+- `%timeit` in a Jupyter notebook is great for small code snippets!
 
 <Admonition title="Prioritise!" color="amber-light" width="100%">
 When using your profiler, check which functions/lines take up a majority of your runtime (by total time/percentage).
