@@ -337,6 +337,24 @@ flowchart TD
 ```
 
 ---
+layout: side-title
+color: lime
+---
+
+:: title ::
+
+## Section Summary
+
+:: content ::
+
+### In this section we have learnt:
+
+- To set realistic performance targets
+- To **always** make sure we have some kind of correctness test before optimising
+- To **always** measure and profile before optimising
+- To know when to stop
+
+---
 layout: top-title
 color: lime
 ---
@@ -352,7 +370,7 @@ So far, we've learnt:
 - How we can go about identifying areas in need of optimisation, and what that process looks like
 
 As this is the **CERN** Inverted School of Computing, I'm willing to bet most of your slow code is numerical in nature:
-- Data anaylsis
+- Data analysis
 - Simulations
 - Heavy calculations
 
