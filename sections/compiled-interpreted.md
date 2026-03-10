@@ -87,7 +87,7 @@ I'm a CPU, and I speak **machine code**
 
 <v-click at=4>
 
-<Admonition title="Important!" color="amber-light" width="100%">
+<Admonition title="Watch Out!" color="amber-light" width="100%">
 
 There is no single machine code, the language depends on your specific CPU (x86/ARM/etc...) and your OS (Windows/Linux/Mac)
 
@@ -99,6 +99,7 @@ There is no single machine code, the language depends on your specific CPU (x86/
 ---
 layout: top-title-two-cols
 color: orange
+columns: is-7
 ---
 
 :: title ::
@@ -123,16 +124,18 @@ g++ my_code.cpp -o my_exec
 ```
 :: right ::
 
-```mermaid
+```mermaid{scale: 0.9}
 flowchart TD
     A[Source Code] -->| Input | B[Compiler]
-    B -->| Output | C[Your Executable]
+    B -->| Output | C["Your Executable
+**(New, Custom Machine Code)**"]
     C <-.->| Run By | D[CPU]
 ```
 
 ---
 layout: top-title-two-cols
 color: orange
+columns: is-7
 ---
 
 :: title ::
@@ -145,46 +148,100 @@ The general idea is as follows:
 
 - Instead of the language having a **compiler**, it will have an **executable** known as the **interpreter**
 - The **interpreter** essentially reads your code "line-by-line", understands what you're trying to do, and asks the CPU to perform the relevant operation
-- Common examples of interpreted languages are Python, JavaScript, Ruby, and Perl
+- Common examples of interpreted languages are Python, Bash, Ruby, and Perl
 
 ```bash
-# No compilation step, just run a Javascript interpreter like
-node my_code.js
-node my_code.js
-node my_code.js
-# `node` is the executable that your CPU can actually run!
+# No compilation step, just run the Python interpreter like
+python my_script.py
+python my_script.py
+python my_script.py
+# `python` is the executable that your CPU can actually run!
 ```
 :: right ::
 
 ```mermaid
 flowchart TD
-    A[Source Code] -->| Input | B[Interpreter Executable]
+    A[Source Code] -->| Input | B["Interpreter Executable
+**(Existing, Generic Machine Code)**"]
     B <-.-> | Run By | C[CPU]
 ```
 
 ---
-layout: top-title
+layout: top-title-two-cols
 color: orange
 ---
 
 :: title ::
 
-## So, why are compiled languages faster?
+## So, Why Are Compiled Languages Faster?
 
-:: content ::
+:: left ::
 
 Compiled languages are faster for two main reasons:
 
-- They don't need to repeat compilation-like steps each time the code is run (e.g. parsing the source code, etc...)
-- Because of this, they can afford to spend more time on these steps, and perform lots of optimisations
+- Less runtime overheads
+  - They don't need to repeat compiler-like steps (e.g. understanding the source code)
+- Compilers can perform optimisations
+  - Since they generate **new, custom** machine code for your program, they can make sure it's optimised for your use case
+  - Modern compiler optimisations are aggressive, they will change their code as much as they can without changing the result/behaviour
 
-These optimisations will try to understand what your code is doing, and restructure/modify it liberally as long as it produces the same desired behaviour. Compiler optimisations often include:
+:: right ::
+
+Compilers are written by incredibly talented performance engineers who have intimate knowledge of a CPU's instruction set
+
+Compilers can perform all kinds of optimisations, including:
 - Computing compile-time constants
 - Loop optimisations
 - Memory and cache optimisations
 - Control flow and function optimisations
 - <Link to="compiler-optimisations" title="So, so much more" />
 
+---
+layout: top-title-two-cols
+color: orange
+---
+
+:: title ::
+
+## Compiler Optimisations, A Quick Example (Loop Fusion)
+
+:: left ::
+
+### Original Source Code
+
+```c
+for(int i = 0; i < 100; i++) {
+    B[i] = A[i] + 5
+}
+
+for(int i = 0; i < 100; i++) {
+    C[i] = B[i] * 7
+}
+```
+Two separate loops over same range
+
+No logic affecting arrays B and C between the loops
+
+:: right ::
+
+### After Optimisation
+
+```c
+for(int i = 0; i < 100; i++) {
+   B[i] = A[i] + 5
+   C[i] = B[i] * 7
+}
+```
+
+Single, **fused** loop
+
+Result/behaviour unchanges
+
+Less overhead for executing loops **(faster!)**
+
+:: default ::
+
+<Link to="compiler-optimisations" title="More examples are available in the backup slides" />
 
 ---
 layout: side-title
@@ -242,8 +299,8 @@ You may have even seen some `.pyc` files in your `__pycache__` folder before. Th
 
 <SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
 
-- Python may translate to bytecode, but it's "compilation" is not like C/C++/Rust
-- It is not intensely optimising and it does not produce machine code
+- Python may translate to bytecode, but its "compilation" is not like C/C++/Rust
+- It is not intensely optimising and it does not produce new machine code
 
 </SpeechBubble>
 
@@ -269,8 +326,10 @@ color: orange
 Not quite...
 
 - As we've covered, compiled languages are typically faster than interpreted languages like Python
-- However, Python is still slower than languages with similar-seeming execution models like Java
-- What is causing this additional slowness?
+  - As they produce new, custom machine code, they're able to make optimisations that interpreted languages like Python simply can't
+  - They also have more runtime overheads than compiled languages
+
+But this isn't the whole story...
 
 ---
 layout: side-title
@@ -286,6 +345,45 @@ color: orange
 :: content ::
 
 <img src="../images/static-dynamic-meme.jpeg" width="75%" />
+
+---
+layout: top-title-two-cols
+color: orange
+---
+
+:: title ::
+
+## Types, A Quick Refresher
+
+:: left ::
+
+Python doesn't make you worry about this, but:
+
+- At runtime, at any given moment, every variable has a **type**
+- The **type** of a variable defines **what it is**, and **what you can do to it**
+  - E.g. `x**2` only makes sense if `x` is number-like type
+  - `len(s)` only makes sense if `s` is a list/array/string type
+
+How languages like C/C++ deal with types is very different to how Python does
+
+:: right ::
+
+### Examples of types:
+
+```python
+# Intrinsic types:
+x = 5 # integer
+y = 3.14 # float
+z = "Hello" # string
+a = True # boolean
+
+# Custom types:
+arr = np.array() # NumPy Array
+df = pd.DataFrame() # Pandas DataFrame
+obj = MyClass() # Custom User MyClass Object
+
+# NOTE TO SELF, REPLACE WITH ACTUAL PYTHON TYPE OUTPUT
+```
 
 ---
 layout: top-title-two-cols
@@ -312,14 +410,16 @@ Dynamic typing can introduce lots of overheads. To compute even a simple `x+y`, 
 
 :: right ::
 
-Strong, Static Typing (C++):
+### Strong, Static Typing (C++):
 
 ```c++
 int x = 5; // Have to specify type (strong)
 x = "Hello"; // INVALID C++! Can't change type (static)
 ```
 
-Weak, Dynamic typing (Python):
+<br>
+
+### Weak, Dynamic typing (Python):
 ```python
 x = 5 # Don't need to specify type (weak)
 x = "Hello" # Perfectly fine to change! (dynamic)
@@ -330,13 +430,32 @@ x = "Hello" # Perfectly fine to change! (dynamic)
 
 <Admonition title="The Compiled Advantage" color="amber-light" width="100%">
 
-<!-- This is why strongly, statically typed compiled languages are so much faster! They check all of this and make all of these decisions at compile time. This is also why they're able to give helpful errors at compile time, instead of runtime (Rust is infamous for its comprehensive compile-time errors). -->
-
 C/C++/etc... not only know the types of your variable, but they make all of these decisions ahead of time during compilation!
 
 Having all of this information is how they're able to optimise so aggressively!
 
 </Admonition>
+
+---
+layout: side-title
+color: orange
+---
+
+:: title ::
+
+## Section Summary
+
+:: content ::
+
+### In this section, we have learnt:
+
+Python is slow because it is a dynamically typed, interpreted language:
+- **Interpreted** = overhead + no custom, optimised machine code for your program
+- **Dynamically typed** = extra checks/work
+
+Statically typed, compiled languages like C/C++/Fortran/Rust are fast because:
+- **Compiled** = optimised machine code specific to your program/CPU/OS
+- **Statically typed** = complete information for compiler to make these optimisations
 
 ---
 layout: side-title
