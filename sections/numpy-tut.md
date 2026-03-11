@@ -359,31 +359,26 @@ def mc_pi_np(n_samples):
 **Another ~33x Speedup!**
 
 ---
-layout: top-title-two-cols
+layout: side-title
 color: yellow
 ---
 
 :: title ::
 
-## And That's It!
+## Section Summary
 
-:: left ::
+:: content ::
 
-Getting good performance in NumPy really is quite simple:
+### In this section we have learnt:
 
-- Avoid For Loops at all costs
-- Always use NumPy arrays (even from initialisation)
-- Make the most of NumPy's functions
+- There are many performance traps when mixing NumPy with pure Python
+- In spite of this, getting good performance with NumPy is actually quite simple
+- Use NumPy for **everything:**
+    - Your arrays
+    - Your array creation/initialisation
+    - Your functions and operations
 
-:: right ::
-
-### You basically want to move away from:
-### **operating on elements of lists**, 
-
-<br>
-
-### and move towards:
-### **vector operating on NumPy arrays**
+**If Lists/For Loops are nowhere to be seen, you'll be fine!**
 
 ---
 layout: top-title
@@ -398,15 +393,19 @@ color: yellow
 
 We've seen that NumPy is the **champion** of vector operations, but can all algorithms be vectorised?
 
-Sadly no. What can we do when algorithms depend on previous values:
+**Sadly no.**
+
+What can we do when algorithms depend on previous values:
 - Recursive functions (e.g. Fibonacci Series)
 - Time series where values depend on previous timestep (e.g. numerical integration)
 
-Basically, any for loop where you're not only accessing `x[i]`, but also `x[i-1]` or `x[i+1]` or any `x[j != i]`
+Basically, any For Loop where you're not only accessing `x[i]`, but also `x[i-1]` or `x[i+1]` 
+
+or really any `x[j != i]`
 
 <br>
 
-**Surely we're not stuck with a pure Python for loop?**
+**Surely we're not stuck with a pure Python For Loop?**
 
 
 
