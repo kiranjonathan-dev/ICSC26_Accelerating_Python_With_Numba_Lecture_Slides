@@ -3,7 +3,7 @@ layout: section
 color: cyan
 ---
 
-# Numerical Optimisations Pt 2: Introducing Numba, a JIT Compiler for Python
+# Introducing Numba, a JIT Compiler for Python
 
 ---
 layout: top-title
@@ -22,7 +22,7 @@ I know I've said this whole time that Python is an interpreted language, but tha
 - A **language** is just a set of syntax that is mapped to some expected functionality, e.g.
   - Python's indentation
   - What `def` does
-  - Even what `x=5` and `x+=5` means
+  - Even what `x=5` and `x+=5` should represent
 - Anything that is able actually run on a CPU is an **implementation** of the language
 
 <br>
@@ -46,9 +46,7 @@ color: cyan
 
 :: content ::
 
-It's a good question, it feels like if Python is easy to write, and compiled code is fast, we should just always compile Python
-
-However, this isn't easy due to how Python is designed:
+Simple answer? Compiling Python scripts as they are is very hard:
 
 - Dynamic typing makes compilation difficult, and optimised compilation almost impossible
 - Huge number of libraries written in different low-level languages would be hard to interface with
@@ -78,7 +76,7 @@ CPython is the reference implementation, but it's far from the only:
   - Technically a different language
 - **PyPy:**
   - JIT (Just-In-Time) Compiler for Python
-  - Less than perfect library compatability
+  - Less than perfect library compatibility
   - Requires you/users to download a separate runtime
 - And many, many more...
 
@@ -139,8 +137,8 @@ columns: is-6
 :: left ::
 
 Just-In-Time (JIT) does what it says, compiles code just as you want to run it:
-- Optimised code = logic, types + compiler
-- Numba gets the logic from the Python bytecode
+- Optimised code requires instructions, types + compiler
+- Numba gets the instructions from the Python bytecode
 - Numba infers the types based on the types of the function arguments at runtime
 - It gives the strongly, statically typed logic to LLVM (a compiler backend used in C/C++ Compilers)
 - LLVM generates beautiful, optimised machine code
@@ -251,10 +249,8 @@ Simply using `@jit` is a great place to start, but there are several arguments y
 - `cache=True`
   - Stores Numba's compilation for reuse
   - (Saves on that JIT-Tax)
-- `nogil=True`
-  - Releases Python's Global Interpreter Lock (GIL)
-- `parallel=True`
-  - More on this later
+- `nogil=True` and `parallel=True`
+  - More on these later
 
 :: right ::
 
@@ -281,7 +277,7 @@ color: cyan
 
 :: title ::
 
-## Numba's Compilation Modes
+## Quick Aside: Numba's Compilation Modes
 
 :: left ::
 
@@ -302,23 +298,14 @@ color: cyan
 ---
 layout: top-title-two-cols
 color: cyan
-columns: is-7
+columns: is-4
 ---
 
 :: title ::
 
-## Please, Only Use Numba With nopython=True
+## Please, only use nopython=True!
 
 :: left ::
-
-Just using `@jit` is dangerous:
-
-- By default, `@jit` will try to compile in `nopython` mode, and default to `object` mode if it fails
-- Since it doesn't throw an error, you could be slowing your code down without realising
-- By using `nopython=True`, you ask Numba to throw and error if it can't compile in `nopython` mode
-- Since it throws an error, you can check why the function couldn't compile and fix the issues!
-
-:: right ::
 
 **It's so common that the devs added a shorthand, `njit`**
 
@@ -338,6 +325,171 @@ Is identical to this:
 
 I will be using `njit` from now on, and I **strongly suggest** that you do too!
 
+:: right ::
+
+In newer versions of Numba, `@jit` and `@njit` are identical (`nopython=True` is the default)
+
+In older versions (<0.59):
+- By default, `@jit` will try to compile in `nopython` mode, and default to `object` mode if it fails
+- Since it doesn't throw an error, you could be slowing your code down without realising
+- By using `nopython=True` (or simply `@njit`), you make sure an error is thrown and that you can see what issues you need to fix!
+
+I still use `@njit` to ensure backwards compatibility
+
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+:: title ::
+
+## A More Complex Example: Monte Carlo Pi Revisited
+
+:: left ::
+
+Previously we had two implementations:
+
+Naive Python **(8.75s)**:
+
+```python
+def mc_pi(n_samples):
+    n_samples_inside = 0
+    for i in prange(n_samples):
+        x = np.random.random() 
+        y = np.random.random()
+        if x**2 + y**2 <= 1:
+            n_samples_inside += 1
+    return 4 * n_samples_inside / n_samples
+```
+
+NumPy Rewrite **(312ms)**:
+
+```python
+def mc_pi_np(n_samples):
+    xs = np.random.random(n_samples)
+    ys = np.random.random(n_samples)
+    r_sqs = xs**2 + ys**2
+    n_samples_inside = np.sum(r_sqs <= 1)
+    return 4 * n_samples_inside / n_samples
+```
+
+:: right ::
+
+How does Numba compare?
+
+```python
+# JIT the naive implementation
+mc_pi_numba = njit()(mc_pi)
+%timeit mc_pi_numba(1_000_000)
+```
+
+**256ms** (similar to NumPy)
+
+```python
+# JIT the numpy implementation
+mc_pi_numba = njit()(mc_pi_np)
+%timeit mc_pi_numba(1_000_000)
+```
+
+**406ms** (slower than NumPy)
+
+Like I said, you can't really beat NumPy at its own game!
+
+**But, if you hate NumPy and love For Loops, you can get the same speed with one line change (instead of full rewrites)!**
+
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+:: title ::
+
+## Were Numba Really Shines: Unavoidable For Loops
+
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+:: title ::
+
+## And Recursive Functions!
+
+:: left ::
+
+### Naive Python
+
+```python
+def naive_fibonacci(N):
+    if N <= 1:
+        return N
+    else:
+        return naive_fibonacci(N-1) + naive_fibonacci(N-2)
+```
+
+For performance, we get:
+
+**14.5s** for the 40th Number
+
+:: right ::
+
+### Numba JIT
+
+```python
+fibonacci_jit = njit()(naive_fibonacci)
+```
+
+For performance, we get:
+
+```sh
+TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+Untyped global name 'naive_fibonacci': Cannot determine Numba type of <class 'function'>
+```
+
+Oh no...
+
+Looks like Numba can't figure out the return type of naive_fibonacci since it's recursive
+
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+:: title ::
+
+## Function Signatures in Numba
+
+:: left ::
+
+I promised you that Numba would handle all of your typing for you
+- As we've seen, most of the time this is true
+- Numba's type inference works really well, **on average**
+- In certain cases, such as this one, it just needs some help
+
+Don't worry, we don't need to manually specify all the types like in C/C++!
+
+:: right ::
+
+We just need to specify the function signature:
+- `"ReturnType(Arg1Type, Arg2Type, ...)"`
+
+### Revised JIT Fibonacci
+
+```python
+fibonacci_jit = njit("int64(int64)")(naive_fibonacci)
+```
+
+Now, for performance we get:
+- **791ms**
+- **~18x speedup** over the original function
+
+You can specify the function signature for any JIT function, and can even supply multiple:
+```python
+fibonacci_jit = njit(["int32(int32)", "int64(int64)", etc...])
+```
+
+Just make sure you put the most specific first (32 before 64, int before float, etc...)
+
 ---
 layout: top-title
 color: cyan
@@ -345,7 +497,7 @@ color: cyan
 
 :: title ::
 
-## Performance Tips For JIT'ed Functions
+## Some Performance Tips For JIT'ed Functions
 
 :: content ::
 
@@ -366,31 +518,11 @@ color: cyan
 
 :: title ::
 
-## Numba and NumPy
+## Bonus: Make Your Own NumPy UFuncs!
 
 :: left ::
 
-### What Works Well
-
-- NumPy array support is first class
-- Many of the numpy builtin functions have been reimplemented for Numba
-
-:: right ::
-
-### What Works Less Well
-
----
-layout: top-title-two-cols
-color: cyan
----
-
-:: title ::
-
-## Make Your Own NumPy UFuncs
-
-:: left ::
-
-You don't even have to write out the for loops!
+You don't even have to write out the For Loops!
 
 :: right ::
 
@@ -419,7 +551,7 @@ color: cyan
 
 :: title ::
 
-## Other Things That Don't Work So Well
+## Things That Don't Work So Well
 
 :: content ::
 
@@ -427,7 +559,8 @@ Numba is amazing when applied to heavy, numerical workflows
 
 Where is doesn't shine so much is:
 - It isn't compatible with most libraries outside of NumPy
-- It doesn't work for string manipulation
+  - I can't JIT them, but since you pick what you can JIT you can still use them together!
+- It doesn't work for string manipulation, I/O, etc...
 - Class/object support isn't perfect
   - `self` is a Python Object that Numba doesn't understand, so `@njit` can't be applied to class methods directly
 
@@ -491,3 +624,10 @@ color: cyan
 :: left ::
 
 :: right ::
+
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+
