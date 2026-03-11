@@ -232,7 +232,7 @@ This can save a lot of time where your CPU is waiting for the next piece of memo
 
 :: right ::
 
-### Vector Operations = SIMD
+### Vector Operations = SIMD (Single Instruction, Multiple Data)
 
 Python For Loops operate one element at a time:
 ```python
@@ -245,7 +245,7 @@ Python For Loops operate one element at a time:
 # 8 CPU Cycles Total
 ```
 
-Modern CPUs can operate as SIMD (Single Instruction, Multiple Data)
+Modern CPUs can operate with SIMD
 ```python
 [1, 2, 3, 4, 5, 6, 7, 8] + [9, 10, 11, 12, 13, 14, 15, 16]
 ===
