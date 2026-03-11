@@ -124,7 +124,7 @@ columns: is-8
 - Use a **profiler** to find which functions (or even which lines) are slowing you down!
 - For this, you need a representative run:
   - Your unit tests will not make good performance tests!
-  - You need a few end-to-end tests with realistic input sizes to properly profile your code
+  - You need a few end-to-end tests with **realistic input sizes** to properly profile your code
 
 :: right ::
 
