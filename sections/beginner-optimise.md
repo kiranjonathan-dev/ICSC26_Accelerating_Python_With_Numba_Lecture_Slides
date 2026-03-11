@@ -374,4 +374,4 @@ As this is the **CERN** Inverted School of Computing, I'm willing to bet most of
 - Simulations
 - Heavy calculations
 
-### So, let's cover two great ways to optimise numerical code!
+So, let's cover two great ways to optimise numerical code - **NumPy and Numba!**
