@@ -197,14 +197,14 @@ color: lime
 There are a **huge** number of profilers for Python
 
 Personally, I'd recommend starting with the basics:
-  - `CProfile` (built-in) 
-    - Perfect for identifying **hot functions**
-    - Combine with `SnakeViz` (pip install) to visualise text output as a graph
-  - `line_profiler` (pip install)
-    - Great when you need a bit more detail on a function
-    - Ideally your functions are small enough not to need this!
 - `%timeit` (one line) and `%%timeit` (whole cell) in Jupyter notebooks are a great starting point!
   - Perfect for direct comparisons of small functions (as we'll use in the exercises)
+- `CProfile` (built-in) 
+    - Perfect for identifying **hot functions**
+    - Combine with `SnakeViz` (pip install) to visualise text output as a graph
+- `line_profiler` (pip install)
+    - Great when you need a bit more detail on a function
+    - Ideally your functions are small enough not to need this!
 
 ---
 layout: top-title-two-cols
