@@ -331,6 +331,10 @@ Not quite...
 
 But this isn't the whole story...
 
+<br>
+
+ChatGPT said Python is "an interpreted, **dynamically typed** language"
+
 ---
 layout: side-title
 color: orange
