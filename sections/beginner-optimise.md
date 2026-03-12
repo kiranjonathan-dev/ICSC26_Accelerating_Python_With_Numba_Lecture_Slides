@@ -114,7 +114,7 @@ columns: is-8
 <Admonition title="Floating Point Numbers Aren't Real!" color="amber-light" width="100%">
 Optimised code may not give exactly the same results, but that doesn't mean it's wrong!
 
-`np.testing.assert_all_close` (and the rest of `numpy.testing`) is your new best friend
+`np.testing.assert_allclose(array1, array2)` (and the rest of `numpy.testing`) is your new best friend
 </Admonition>
 
 </v-click>
@@ -414,7 +414,7 @@ After each function/major line optimisation, check two things:
 <v-clicks>
 
 - Is my code still correct?
-  - Remember, `np.testing.assert_all_close` is your friend!
+  - Remember, `np.testing.assert_allclose(array1, array2)` is your friend!
 - Have I met my performance goal?
   - It's important to know when to stop!
   - Diminishing returns exist, at some point it's not worth more of your dev time
