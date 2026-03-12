@@ -59,7 +59,7 @@ But that doesn't mean people haven't tried...
 ---
 layout: top-title-two-cols
 color: cyan
-columns: is-8
+columns: is-7
 ---
 
 :: title ::
@@ -70,15 +70,16 @@ columns: is-8
 
 CPython is the reference implementation, but it's far from the only:
 
-- **Cython:**
-  - First transpiles into C, then compiles the C (requires C compiler)
-  - Requires static typing for best results
-  - Technically a different language
-- **PyPy:**
-  - JIT (Just-In-Time) Compiler for Python
-  - Less than perfect library compatibility
-  - Requires you/users to download a separate runtime
+- Cython
+- PyPy
+- Jython
+- MicroPython
+- Nuitka
 - And many, many more...
+
+<br>
+
+Today, we're going to be talking about **Numba**
 
 :: right ::
 
@@ -88,41 +89,17 @@ CPython is the reference implementation, but it's far from the only:
 
 <img src="../images/pypy-logo.svg" width="70%" />
 
+<br>
+
+<img src="../images/jython.png" width="70%" />
+
 ---
 layout: quote
 color: cyan
 author: Numba Website
 ---
 
-Numba is an open source JIT compiler that translates a subset of Python and NumPy code into fast machine code. 
-
----
-layout: top-title-two-cols
-color: cyan
-columns: is-8
----
-
-:: title ::
-
-## Why I Like Numba for Scientific Computing
-
-:: left ::
-
-If Numba's a JIT compiler, like PyPy, why pick it?
-
-- Simple `pip install`, no different runtime/interpreter needed
-- Doesn't require non-pip dependencies like a C compiler
-- No requirements for type hinting
-- Works mostly through decorators
-  - Simple, easy to learn syntax
-  - Only compile the performance-critical bits, leave the rest in pure CPython (nice and compatible)
-- Supports a large set of NumPy operations by default:
-  - Numba = NumPy + Mamba (world's fastest snake)
-- Only way to write CUDA kernels in pure Python
-
-:: right ::
-
-<img src="../images/numba-blue-horizontal-rgb.svg" />
+Numba is an open source **JIT compiler** that translates a **subset of Python and NumPy code** into fast machine code. 
 
 ---
 layout: top-title-two-cols
@@ -132,24 +109,58 @@ columns: is-6
 
 :: title ::
 
+## Why I Like Numba For Scientific Computing
+
+:: left ::
+
+**It's easy to learn:**
+- No type hinting required!
+- Mostly works through simple to learn decorators
+
+**It's easy to install/distribute:**
+- Simple `pip install`
+- No need for compilers/new Python interpreter
+
+<br>
+
+
+<img src="../images/numba-blue-horizontal-rgb.svg" />
+
+:: right ::
+
+**It's great for scientific use cases:**
+- Supports a large set of NumPy operations
+  - Numba = NumPy + Mamba (world's fastest snake)
+- You only compile the functions you need to **(heavy numerics)**
+  - Leave the rest of your code as plain, compatible CPython!
+  - This means you can still work with unsupported libs (SciPy, AI libs, etc...)
+
+---
+layout: top-title-two-cols
+color: cyan
+columns: is-8
+---
+
+:: title ::
+
 ## How Numba Works
 
 :: left ::
 
-Just-In-Time (JIT) does what it says, compiles code just as you want to run it:
-- Optimised code requires instructions, types + compiler
-- Numba gets the instructions from the Python bytecode
-- Numba infers the types based on the types of the function arguments at runtime
-- It gives the strongly, statically typed logic to LLVM (a compiler backend used in C/C++ Compilers)
-- LLVM generates beautiful, optimised machine code
-
-:: right ::
-
-<img src="../images/numba-diagram.png" />
+### Just-In-Time (JIT) Compilation:
+### Compilation Right When You Need It
 
 <br>
 
-Since Numba infers the types from the function arguments, we don't have to manually tell it the types to get all that performance benefit!
+<img src="../images/numba-diagram.png" />
+
+:: right ::
+
+**We've learnt that we need types to generate optimised machine code**
+
+<br>
+
+**Since Numba can infer the types for us, we can get all the benefit without the effort!**
 
 ---
 layout: top-title-two-cols
@@ -162,17 +173,64 @@ color: cyan
 
 :: left ::
 
-The core feature of Numba is its `@jit` decorator:
-- Functions with the decorator are JIT compiled the first time they're called with certain arguments
-- From that point, any calls to that function are like calls to NumPy's optimised compiled functions
-- `my_slow_python(1_000_000)` - 23.4ms
-- `my_first_jit(1_000_000)` - 90.6ns (~260,000x speedup)
+### Slow Python For Loop
 
-That's some free and easy performance right there!
+```python
+def slow_python(array):
+  for i in range(len(array)):
+    array[i] += 5
+```
+
+**23.4ms**
+
+<br>
+
+Simply import numba and add `@numba.jit` 
+
+**(Two lines!)**
 
 :: right ::
 
-Decorators can either be applied in the "typical" way (best for production):
+### Fast Numba JIT Loop
+
+```python
+import numba
+
+@numba.jit
+def my_first_jit(array):
+  for i in range(len(array)):
+    array[i] += 5
+```
+
+**90.6ns (~260,000x) Speedup**
+
+<br>
+
+Get some free performance!
+
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+:: title ::
+
+## @numba.jit - A Bit More Detail
+
+:: left ::
+
+The core feature of Numba is its `@jit` decorator:
+- Functions with the decorator are JIT compiled the first time they're called with certain types
+  - E.g. the first time you might call your function with `int` vars
+  - The second time you might call them with `float` vars
+- From that point, any calls to that function are like calls to NumPy's optimised compiled functions
+
+**There are also multiple ways to apply decorators in Python**
+
+:: right ::
+
+### Directly on Function
+### (Best For Production)
 
 ```python
 @numba.jit
@@ -182,7 +240,11 @@ def my_first_jit(num_points):
     sum += i
   return sum
 ```
-Or they can be applied after function declaration:
+
+<br>
+
+### From Another Function
+### (Best For Time Comparisons)
 
 ```python
 def my_slow_python(num_points):
@@ -194,18 +256,16 @@ def my_slow_python(num_points):
 my_first_jit = numba.jit()(my_slow_python)
 ```
 
-This second method is ideal for timing comparisons as you can see the impact of JIT without copy/pasting the code
-
 ---
-layout: top-title
+layout: top-title-two-cols
 color: cyan
 ---
 
 :: title ::
 
-## The JIT-Tax
+## The "JIT-Tax"
 
-:: content ::
+:: left ::
 
 If you were to work through that last example yourself, and time it:
 
@@ -220,7 +280,7 @@ INSERT IMAGE OF TIMEIT MESSAGE
 
 That's because it takes time to compile the function the first time you call it
 
-This time can often be longer than the original run time of a function, so compiling it is only worth it if you call the function more than once
+**Compilation is not free!**
 
 <Admonition title="Warning For Manual Timing" color="amber-light" width="100%">
 
@@ -229,6 +289,18 @@ If you're not using `%timeit` and are manually timing your functions, make sure 
 The first time will give you time including compilation, and the second time will give you the pure execution time
 
 </Admonition>
+
+:: right ::
+
+This is the **"JIT-Tax"**:
+
+- For small functions/small inputs, the JIT-Tax can slow you down!
+- **Do not put `@numba.njit` on all of your functions, **measure** and use it selectively!**
+- **JIT works best for:**
+  - Functions which are slow enough to eat the JIT-Tax
+  - Slow functions which you call many times in your program (JIT-Tax only strikes once!)
+  - Don't trust these rules of thumb though, **measure!**
+
 
 ---
 layout: top-title-two-cols
@@ -242,99 +314,41 @@ columns: is-10
 
 :: left ::
 
-Simply using `@jit` is a great place to start, but there are several arguments you can give it:
+You can customise `@jit` with flags:
 
 - `nopython=True`
-  - Stops Numba from calling back to the interpreter
+  - All code **must** be compiled (or error thrown)
+  - Enabled by default as of Numba 0.59 **(Please only use versions >0.59 for best results!)**
 - `cache=True`
-  - Stores Numba's compilation for reuse
+  - Stores Numba's compilation for reuse between runs
   - (Saves on that JIT-Tax)
 - `nogil=True` and `parallel=True`
-  - More on these later
+  - More on these later...
 
 :: right ::
 
-In the "typical" decorator way:
+Applying compilation flags:
+
+### Directly on Function
 
 ```python
 @numba.jit(cache=True)
 def my_second_jit()
+  ...
 ```
 
-Or in the alternative form:
+<br>
+
+### From Another Function
 
 ```python
 def my_slow_python()
+  ...
 
 my_second_jit = numba.jit(cache=True)(my_slow_python)
 # Arguments go in those mysterious first brackets!
 ```
 
----
-layout: top-title-two-cols
-color: cyan
----
-
-:: title ::
-
-## Quick Aside: Numba's Compilation Modes
-
-:: left ::
-
-### `nopython` mode
-
-- The whole function must be compiled with Numba
-- Numba can't ask for help with objects it doesn't understand
-- Everything compiled = performance boost (Minus JIT-Tax)
-
-:: right ::
-
-### `object` mode
-
-- Numba can ask the Python interpreter for help with objects
-- Anything run by the interpreter has no speedup
-- Overhead of switching between interpreter/compiled often **makes performance worse, not better**
-
----
-layout: top-title-two-cols
-color: cyan
-columns: is-4
----
-
-:: title ::
-
-## Please, only use nopython=True!
-
-:: left ::
-
-**It's so common that the devs added a shorthand, `njit`**
-
-This:
-
-```python
-@numba.jit(nopython=True)
-```
-
-Is identical to this:
-
-```python
-@numba.njit
-```
-
-<br>
-
-I will be using `njit` from now on, and I **strongly suggest** that you do too!
-
-:: right ::
-
-In newer versions of Numba, `@jit` and `@njit` are identical (`nopython=True` is the default)
-
-In older versions (<0.59):
-- By default, `@jit` will try to compile in `nopython` mode, and default to `object` mode if it fails
-- Since it doesn't throw an error, you could be slowing your code down without realising
-- By using `nopython=True` (or simply `@njit`), you make sure an error is thrown and that you can see what issues you need to fix!
-
-I still use `@njit` to ensure backwards compatibility
 
 ---
 layout: top-title-two-cols
@@ -349,7 +363,7 @@ color: cyan
 
 Previously we had two implementations:
 
-Naive Python **(8.75s)**:
+### Naive Python **(8.75s)**:
 
 ```python
 def mc_pi(n_samples):
@@ -362,7 +376,9 @@ def mc_pi(n_samples):
     return 4 * n_samples_inside / n_samples
 ```
 
-NumPy Rewrite **(312ms)**:
+<br>
+
+### NumPy Rewrite **(312ms)**:
 
 ```python
 def mc_pi_np(n_samples):
@@ -377,23 +393,25 @@ def mc_pi_np(n_samples):
 
 How does Numba compare?
 
+### Naive Python JIT'ed
+
 ```python
-# JIT the naive implementation
-mc_pi_numba = njit()(mc_pi)
-%timeit mc_pi_numba(1_000_000)
+mc_pi_jit = jit()(mc_pi)
+%timeit mc_pi_jit(1_000_000)
 ```
 
 **256ms** (similar to NumPy)
 
+### NumPy JIT'ed
+
 ```python
-# JIT the numpy implementation
-mc_pi_numba = njit()(mc_pi_np)
-%timeit mc_pi_numba(1_000_000)
+mc_pi_np_jit = jit()(mc_pi_np)
+%timeit mc_pi_jit(1_000_000)
 ```
 
 **406ms** (slower than NumPy)
 
-Like I said, you can't really beat NumPy at its own game!
+You can't beat NumPy at its own game!
 
 **But, if you hate NumPy and love For Loops, you can get the same speed with one line change (instead of full rewrites)!**
 
@@ -404,7 +422,43 @@ color: cyan
 
 :: title ::
 
-## Were Numba Really Shines: Unavoidable For Loops
+## Where Numba Really Shines: Unavoidable For Loops
+
+:: left ::
+
+### Simple Time Integration
+
+```python
+def naive_time_integral(pos_0, vel_0, dt, steps, acc=-9.81):
+  pos = np.zeros(steps)
+  pos[0] = pos_0
+  vel = np.zeros(steps)
+  vel[0] = vel_0
+
+  for i in range(1, steps):
+      vel[i] = vel[i-1] + acc * dt
+      pos[i] = pos[i-1] + vel[i-1] * dt
+
+  return pos, vel, acc
+```
+
+**3.03s**
+
+We can't rewrite this as a NumPy vectorised operation, as each `i` explicitly depends on `i-1`
+
+**Basically, we have to calculate each time step in order, not all at once!**
+
+:: right ::
+
+### JIT'ed Time Integration
+
+```python
+time_integral_jit = numba.jit()(naive_time_integral)
+```
+
+**71.6ms**
+
+Once again, one change = **42x Speedup**
 
 ---
 layout: top-title-two-cols
@@ -431,8 +485,6 @@ For performance, we get:
 
 **14.5s** for the 40th Number
 
-:: right ::
-
 ### Numba JIT
 
 ```python
@@ -442,13 +494,27 @@ fibonacci_jit = njit()(naive_fibonacci)
 For performance, we get:
 
 ```sh
-TypingError: Failed in nopython mode pipeline (step: nopython frontend)
-Untyped global name 'naive_fibonacci': Cannot determine Numba type of <class 'function'>
+TypingError: Failed in nopython mode pipeline 
+(step: nopython frontend)
+Untyped global name 'naive_fibonacci': 
+Cannot determine Numba type of <class 'function'>
 ```
 
-Oh no...
+:: right ::
 
-Looks like Numba can't figure out the return type of naive_fibonacci since it's recursive
+Oh no! That's not a speedup...
+
+<br>
+
+This is a classic Numba **type inference** error:
+- When compiling, Numba tries to **infer** what the types are and make sure they're all static
+- It can't figure out the return type of `naive_fibonacci` (what we're JIT-ing) because it depends on `naive_fibonacci` (itself)
+
+Even I'd find that a little confusing...
+
+<br>
+
+**Luckily, there's a way we can help it!**
 
 ---
 layout: top-title-two-cols
@@ -467,6 +533,8 @@ I promised you that Numba would handle all of your typing for you
 - In certain cases, such as this one, it just needs some help
 
 Don't worry, we don't need to manually specify all the types like in C/C++!
+
+We only need to specify the **function signature**
 
 :: right ::
 
