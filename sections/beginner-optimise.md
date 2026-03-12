@@ -468,6 +468,12 @@ color: lime
 
 </v-clicks>
 
+<v-click at=5>
+
+<img src="../images/stop-optimising.webp" width="80%" />
+
+</v-click>
+
 ---
 layout: top-title
 color: lime
