@@ -295,7 +295,7 @@ The first time will give you time including compilation, and the second time wil
 This is the **"JIT-Tax"**:
 
 - For small functions/small inputs, the JIT-Tax can slow you down!
-- **Do not put `@numba.njit` on all of your functions, **measure** and use it selectively!**
+- **Do not put `@numba.jit` on all of your functions, **measure** and use it selectively!**
 - **JIT works best for:**
   - Functions which are slow enough to eat the JIT-Tax
   - Slow functions which you call many times in your program (JIT-Tax only strikes once!)
@@ -486,7 +486,7 @@ def naive_fibonacci(N):
 ### Numba JIT
 
 ```python
-fibonacci_jit = njit()(naive_fibonacci)
+fibonacci_jit = numba.jit()(naive_fibonacci)
 ```
 
 ```sh
@@ -536,7 +536,7 @@ We only need to specify the **function signature**
 ### Revised JIT Fibonacci
 
 ```python
-fibonacci_jit = njit("int64(int64)")(naive_fibonacci)
+fibonacci_jit = numba.jit("int64(int64)")(naive_fibonacci)
 ```
 
 Now, for performance we get:
@@ -545,7 +545,7 @@ Now, for performance we get:
 
 You can specify the function signature for any JIT function, and can even supply multiple:
 ```python
-fibonacci_jit = njit(["int32(int32)", "int64(int64)",...])
+fibonacci_jit = numba.jit(["int32(int32)", "int64(int64)",...])
 ```
 
 Just make sure you put the most specific first 
@@ -760,7 +760,7 @@ class JITCircle:
   def area(self):
     return _calc_area(self.radius) # Pass in required args
 
-  @njit # `njit` must be first!
+  @numba.jit # `@jit` must be first!
   @staticmethod # Doesn't require self reference
   def _calc_area(radius):
     return np.pi * radius**2
@@ -786,9 +786,9 @@ color: cyan
 - Python doesn't have to be interpreted
   - CPython is just one of many Python implementations
 - Numba is a Just-In-Time (JIT) Compiler for numerical Python and a subset of NumPy
-- When Numba can help improve performance
-  - Remember - don't JIT everything, the JIT-Tax is real!
-  - Only use it where it's needed **(measure!)**
+- When Numba can improve performance
+  - Perfect for large numerical loops
+  - Remember - don't JIT everything, the JIT-Tax is real **(measure!)**
 - How to use Numba
   - The `@numba.jit` decorator and its flag `cache=True`
-  - The `@numba.vectorize` decorator
+  - Creating ufuncs with `@numba.vectorize`
