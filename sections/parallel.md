@@ -19,7 +19,7 @@ columns: is-8
 
 So far, we've learnt how to optimise Python code with NumPy and Numba
 - We often find that their performance is quite similar, since they ultimately compile into very similar code
-- What happens if I profile my code, and its still 80% dominated by some beautiful NumPy code?
+- What happens if I profile my code, and its still 80% dominated by some beautiful NumPy or Numba code?
 - Is it finally time to concede and break out the C++?
 
 **Absolutely not!**
@@ -68,7 +68,7 @@ color: indigo
 :: content ::
 
 Numba was built with parallelism in mind, and provides a few ways you can go about it:
-- JIT compiling functions with `@njit(parallel=True)`
+- JIT compiling functions with `@jit(parallel=True)`
 - Using `@vectorize(target="parallel")` or even `@vectorize(target="cuda")`
 - Writing your own GPU kernels with Numba's CUDA support
   - This is really cool, and the only way you can write CUDA kernels in **pure** python
@@ -85,6 +85,18 @@ color: indigo
 
 ## JIT-ing Our First Function With parallel=True
 
+:: left ::
+
+### Nice, NumPy Vectorized Code
+
+**If** your data is big enough, parallelising NumPy code is **one of the few good reasons to JIT compile it**
+
+:: right ::
+
+### Serial JIT Version
+
+### Parallel JIT Version
+
 ---
 layout: top-title-two-cols
 color: indigo
@@ -92,7 +104,7 @@ color: indigo
 
 :: title ::
 
-## Numba pranges
+## Numba pranges - Your Own Parallel For Loops!
 
 ---
 layout: top-title-two-cols
