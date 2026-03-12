@@ -484,7 +484,7 @@ But if you're loading data from files libraries will often hand you NumPy arrays
 
 Also, the more you operate on that array, the better your speed up will get!
 
-### ADD LINK TO BACKUP SLIDES ON NUMPY ARRAY INITIALISATION METHODS
+<Link to="numpy-inits" title="More Examples of NumPy Array Initialisations Here" />
 
 </v-clicks>
 
