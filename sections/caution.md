@@ -39,15 +39,16 @@ Some further reading/watching:
   - This One is My Personal Favourite
 
 ---
-layout: top-title
+layout: top-title-two-cols
 color: sky
+columns: is-7
 ---
 
 :: title ::
 
 ## If You Remember Anything From Today, I Hope It's This
 
-:: content ::
+:: left ::
 
 - Python is a completely valid option for scientific workflows
 - Pure Python can be slow, but yours doesn't have to be 
@@ -55,9 +56,11 @@ color: sky
 - NumPy will give you all the performance you need 99% of the time
 - And in that other 1%, tools like Numba are a great choice
 - Be careful with parallel compute, and only use it when you need it!
-- And finally, most importantly:
 
-<br>
+:: right ::
 
+<img src="../images/just-use-python.webp" />
+
+And finally, most importantly:
 ### **Always Measure Before Optimising and Make Sure You Test Your New Code!**
 
