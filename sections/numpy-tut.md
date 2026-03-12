@@ -16,17 +16,34 @@ color: yellow
 
 :: left ::
 
+<v-click>
+
 NumPy is THE package for numerical/scientific computing in Python.
 
+</v-click>
+
+<v-click>
+
 It's incredibly fast, with a mostly C/C++ backend, and provides features like:
+
+</v-click>
+
+<v-clicks>
+
 - Efficient, flexible N-dimensional arrays
 - Comprehensive vector/linear algebra operations
 - Useful statistics functions
 - Great random number generation
 
+</v-clicks>
+
 :: right ::
 
+<v-click at=1>
+
 <img src="../images/NumPy_logo_2020.svg" />
+
+</v-click>
 
 ---
 layout: top-title
@@ -39,7 +56,13 @@ color: yellow
 
 :: content ::
 
+<v-click>
+
 Let's make this perfectly clear:
+
+</v-click>
+
+<v-clicks>
 
 - This talk is about Numba, but that's not my first choice for optimisation
 - I will **ALWAYS** check that I'm properly using NumPy before reaching for Numba
@@ -48,9 +71,15 @@ Let's make this perfectly clear:
 - If NumPy can do it already, you almost certainly can't do it better
 - Even if you do need Numba, Numba and NumPy work amazingly together!
 
+</v-clicks>
+
 <br>
 
+<v-click>
+
 **So let's have a quick refresher on how to make the most of NumPy!**
+
+</v-click>
 
 ---
 layout: quote
@@ -74,6 +103,8 @@ color: yellow
 
 :: left ::
 
+<v-click>
+
 ### For loops
 
 ```python
@@ -85,13 +116,28 @@ def naive_mean(x_list):
   return mean
 ```
 
+</v-click>
+
+<v-click>
+
 - Verbose, harder to read
 - Hand-written = Prone to error
 - Python For loop = performance death
-- Time for 1,000,000 elements:
-  - **352ms**
+
+</v-click>
+
+<br>
+
+<v-click at=5>
+
+Time for 1,000,000 elements:
+- **352ms**
+
+</v-click>
 
 :: right ::
+
+<v-click>
 
 ### NumPy Built-In Functions
 
@@ -100,13 +146,30 @@ def np_mean(x_list):
   return np.mean(x_list)
 ```
 
+</v-click>
+
+<v-click>
+
 - Clean and readable
 - Will always use the correct formula
 - For loop is happening under the hood in C/C++ (much faster, vectorised operation)
-- Time for 1,000,000 elements:
-  - **423ms**
+
+</v-click>
+
+<br>
+
+<v-click at=6>
+
+Time for 1,000,000 elements:
+- **423ms**
+
+</v-click>
+
+<v-click at=7>
 
 **Wait, NumPy is slower?**
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -120,6 +183,8 @@ columns: is-5
 
 :: left ::
 
+<v-click>
+
 In the previous example, I ran the timings like this:
 
 ```python
@@ -129,13 +194,26 @@ x_list = list(range(1_000_000))
 %timeit naive_mean(x_list) # 352ms
 %timeit np_mean(x_list) # 423ms
 ```
+
+</v-click>
+
+<v-click>
+
 Since `np_mean` is slower, and the NumPy For Loop is written in C++, does that mean Python For Loops are faster than C++?
+
+</v-click>
+
+<v-click>
 
 **Absolutely Not!**
 
 Both the For Loop and NumPy mean were being run on a Python list
 
+</v-click>
+
 :: right ::
+
+<v-click>
 
 If I instead run my test like this:
 
@@ -144,17 +222,33 @@ If I instead run my test like this:
 x_list = list(range(1_000_000))
 x_array = np.array(x_list)
 
-%timeit naive_mean(x_list) # 352ms
+%timeit naive_mean(x_list) # Run on Python List
 %timeit np_mean(x_array) # Run on NumPy array
 ```
 
+</v-click>
+
+<v-click>
+
 The final performance comes in as:
-- Python For Loop: **352ms**
-- NumPy Mean: **15.4ms**
+- Python For Loop (w/ Python List): **352ms**
+- NumPy Mean (w/ NumPy Array): **15.4ms**
+
+</v-click>
+
+<v-click>
 
 That's **~23x Speedup** - now that's what we want!
 
-**Why is it so different?**
+</v-click>
+
+<br>
+
+<v-click>
+
+**Why is it so different with a NumPy array?**
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -168,6 +262,8 @@ columns: is-4
 
 :: left ::
 
+<v-click>
+
 ### Python lists
 
 ```python
@@ -176,13 +272,20 @@ x_list = [1, 2.4, 3, 7]
 x_list.append("Hello") # Fine and cheap
 ```
 
+</v-click>
+
+<v-clicks>
+
 - Each number is stored as a bloated `PyObject` spread out in memory (discontiguous)
 - This does mean that you can mix different datatypes
 - And that appending to the array is typically cheap
 
-**They're so different that NumPy has to convert your list to an array to operate on it. This is why it was slower than the for loop!**
+</v-clicks>
+
 
 :: right ::
+
+<v-click>
 
 ### NumPy arrays
 
@@ -196,12 +299,23 @@ x_array = np.append(x_array, 'Hello') # Expensive!
 # Now x_array = ["1", "2.4", "3", "7", "Hello"] (all strings!)
 ```
 
+</v-click>
+
+<v-clicks>
+
 - NumPy stores it as a strongly-typed, contiguous C-style array
 - Can only include one datatype, which NumPy will infer
   - You can check what NumPy chose with `x_array.dtype`
 - C array = no in-place appends
   - Appends always create new arrays (expensive)
 
+</v-clicks>
+
+<v-click at=9>
+
+**They're so different that NumPy has to convert your list to an array to operate on it! This slows NumPy down!**
+
+</v-click>
 ---
 layout: top-title-two-cols
 color: yellow
@@ -213,9 +327,19 @@ color: yellow
 
 :: left ::
 
+<v-click>
+
 ### Contiguous Memory = Cache Prefetching
 
+</v-click>
+
+<v-click>
+
 Your CPU/OS is really smart
+
+</v-click>
+
+<v-click>
 
 Let's say you're accessing `A0`, then `A1`, then `A2` and `A3` from this memory block:
 
@@ -223,16 +347,32 @@ Let's say you're accessing `A0`, then `A1`, then `A2` and `A3` from this memory 
 [A0, A1, A2, A3, A4, A5, ...]
 ```
 
+</v-click>
+
+<v-click>
+
 It'll see that it's a regular access pattern and start peaking ahead!
 
 It will then load `[A4, ...]` in chunks for you
 
+</v-click>
+
+<v-click>
+
 This can save a lot of time where your CPU is waiting for the next piece of memory to operate on!
+
+</v-click>
 
 
 :: right ::
 
+<v-click>
+
 ### Vector Operations = SIMD (Single Instruction, Multiple Data)
+
+</v-click>
+
+<v-click>
 
 Python For Loops operate one element at a time:
 ```python
@@ -245,6 +385,10 @@ Python For Loops operate one element at a time:
 # 8 CPU Cycles Total
 ```
 
+</v-click>
+
+<v-click>
+
 Modern CPUs can operate with SIMD
 ```python
 [1, 2, 3, 4, 5, 6, 7, 8] + [9, 10, 11, 12, 13, 14, 15, 16]
@@ -253,6 +397,15 @@ Modern CPUs can operate with SIMD
 [5, 6, 7, 8] + [13, 14, 15, 18] # Cycle 2
 # 2 CPU Cycles Total
 ```
+
+</v-click>
+
+<v-click>
+
+**Less cycles = more performance!**
+
+</v-click>
+
 ---
 layout: top-title-two-cols
 color: yellow
@@ -264,10 +417,17 @@ color: yellow
 
 :: left ::
 
+<v-click>
+
 If NumPy converting the Python list to a NumPy array is why NumPy was slower, did I not just cheat with updated benchmarks?
+
+</v-click>
+
+<v-click>
 
 Kind of! If we do include the array creation:
 
+### For Loop + List:
 ```python
 %%timeit
 x_list = list(range(1_000_000))
@@ -276,7 +436,12 @@ naive_mean(x_list)
 
 **636ms**
 
-<br>
+</v-click>
+
+
+<v-click>
+
+### NumPy + Array:
 
 ```python
 %%timeit
@@ -287,9 +452,19 @@ np_mean(x_array)
 
 **731ms** - Still slower!
 
+</v-click>
+
 :: right ::
 
+<v-click>
+
 That's why you should always initialise as a NumPy array from the start!
+
+</v-click>
+
+<v-click>
+
+### With NumPy Initialisation:
 
 ```python
 %%timeit
@@ -299,6 +474,10 @@ np_mean(x_array)
 
 **42.4ms**
 
+</v-click>
+
+<v-clicks>
+
 That puts our actual speedup at **~15x**
 
 But if you're loading data from files libraries will often hand you NumPy arrays directly
@@ -306,6 +485,8 @@ But if you're loading data from files libraries will often hand you NumPy arrays
 Also, the more you operate on that array, the better your speed up will get!
 
 ### ADD LINK TO BACKUP SLIDES ON NUMPY ARRAY INITIALISATION METHODS
+
+</v-clicks>
 
 ---
 layout: top-title-two-cols
@@ -317,6 +498,8 @@ color: yellow
 ## Putting It Together: Monte Carlo Pi Estimation
 
 :: left ::
+
+<v-click>
 
 ### Naive Python
 
@@ -331,12 +514,25 @@ def mc_pi(n_samples):
     return 4 * n_samples_inside / n_samples
 ```
 
+</v-click>
+
+<v-clicks>
+
 - Sin 1: Pure Python For Loop
 - Sin 2: NumPy functions operating per element
 
+</v-clicks>
+
+<v-click at=9>
+
+Runtime:
 **4.32s**
 
+</v-click>
+
 :: right ::
+
+<v-click>
 
 ### NumPy Vectorised
 
@@ -349,14 +545,29 @@ def mc_pi_np(n_samples):
     return 4 * n_samples_inside / n_samples
 ```
 
+</v-click>
+
+<v-clicks>
+
 - For Loop gone!
 - Using NumPy arrays and NumPy initialisation
 - NumPy array operations and reductions
 - Even using a fancy boolean mask!
 
+</v-clicks>
+
+<v-click at=10>
+
+Runtime:
 **129ms**
 
+</v-click>
+
+<v-click at=11>
+
 **Another ~33x Speedup!**
+
+</v-click>
 
 ---
 layout: side-title
@@ -369,16 +580,38 @@ color: yellow
 
 :: content ::
 
+<v-click>
+
 ### In this section we have learnt:
 
+</v-click>
+
+<v-click>
+
 - There are many performance traps when mixing NumPy with pure Python
+
+</v-click>
+
+<v-click>
+
 - In spite of this, getting good performance with NumPy is actually quite simple
+
+</v-click>
+
+<v-click>
+
 - Use NumPy for **everything:**
     - Your arrays
     - Your array creation/initialisation
     - Your functions and operations
 
+</v-click>
+
+<v-click>
+
 **If Lists/For Loops are nowhere to be seen, you'll be fine!**
+
+</v-click>
 
 ---
 layout: top-title
@@ -391,21 +624,46 @@ color: yellow
 
 :: content ::
 
+<v-click>
+
 We've seen that NumPy is the **champion** of vector operations, but can all algorithms be vectorised?
+
+</v-click>
+
+<v-click>
 
 **Sadly no.**
 
+</v-click>
+
+<v-click>
+
 What can we do when algorithms depend on previous values:
+
+</v-click>
+
+<v-clicks>
+
 - Recursive functions (e.g. Fibonacci Series)
 - Time series where values depend on previous timestep (e.g. numerical integration)
+
+</v-clicks>
+
+<v-click>
 
 Basically, any For Loop where you're not only accessing `x[i]`, but also `x[i-1]` or `x[i+1]` 
 
 or really any `x[j != i]`
 
+</v-click>
+
 <br>
 
+<v-click>
+
 **Surely we're not stuck with a pure Python For Loop?**
+
+</v-click>
 
 
 
