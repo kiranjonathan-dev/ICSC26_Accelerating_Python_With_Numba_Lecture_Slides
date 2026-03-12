@@ -111,7 +111,7 @@ columns: is-8
 
 <v-click>
 
-<Admonition title="Floating Point Numbers Aren't Real!" color="amber-light" width="100%">
+<Admonition title="Remember - Floating Point Numbers Aren't Commutative!" color="amber-light" width="100%">
 Optimised code may not give exactly the same results, but that doesn't mean it's wrong!
 
 `np.testing.assert_allclose(array1, array2)` (and the rest of `numpy.testing`) is your new best friend
