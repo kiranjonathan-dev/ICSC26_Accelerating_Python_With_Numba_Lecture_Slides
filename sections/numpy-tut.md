@@ -359,7 +359,7 @@ It will then load `[A4, ...]` in chunks for you
 
 <v-click>
 
-This can save a lot of time where your CPU is waiting for the next piece of memory to operate on!
+**Less time spent looking for/loading your data = more performance!**
 
 </v-click>
 
