@@ -481,8 +481,6 @@ def naive_fibonacci(N):
         return naive_fibonacci(N-1) + naive_fibonacci(N-2)
 ```
 
-For performance, we get:
-
 **14.5s** for the 40th Number
 
 ### Numba JIT
@@ -491,8 +489,6 @@ For performance, we get:
 fibonacci_jit = njit()(naive_fibonacci)
 ```
 
-For performance, we get:
-
 ```sh
 TypingError: Failed in nopython mode pipeline 
 (step: nopython frontend)
@@ -500,11 +496,9 @@ Untyped global name 'naive_fibonacci':
 Cannot determine Numba type of <class 'function'>
 ```
 
-:: right ::
-
 Oh no! That's not a speedup...
 
-<br>
+:: right ::
 
 This is a classic Numba **type inference** error:
 - When compiling, Numba tries to **infer** what the types are and make sure they're all static
@@ -535,11 +529,9 @@ I promised you that Numba would handle all of your typing for you
 Don't worry, we don't need to manually specify all the types like in C/C++!
 
 We only need to specify the **function signature**
+- `"ReturnType(Arg1Type, Arg2Type, ...)"`
 
 :: right ::
-
-We just need to specify the function signature:
-- `"ReturnType(Arg1Type, Arg2Type, ...)"`
 
 ### Revised JIT Fibonacci
 
@@ -553,31 +545,47 @@ Now, for performance we get:
 
 You can specify the function signature for any JIT function, and can even supply multiple:
 ```python
-fibonacci_jit = njit(["int32(int32)", "int64(int64)", etc...])
+fibonacci_jit = njit(["int32(int32)", "int64(int64)",...])
 ```
 
-Just make sure you put the most specific first (32 before 64, int before float, etc...)
+Just make sure you put the most specific first 
+
+(32 bit before 64 bit, int before float, etc...)
 
 ---
-layout: top-title
+layout: top-title-two-cols
 color: cyan
+columns: is-5
 ---
 
 :: title ::
 
 ## Some Performance Tips For JIT'ed Functions
 
-:: content ::
+:: left ::
 
-When JIT-ing functions, be sure to always:
-- Use NumPy arrays instead of Python lists
-  - They're contiguous in memory and easy for Numba to understand
-- Favour simple, explicit loops (opposite of NumPy, I know):
-  - These are easier of Numba to understand and for LLVM to optimise
-- Keep your functions small
-  - Numba can inline JIT'ed functions into other JIT'ed functions
-- Only use Numba where you need it
-  - Numba only works with numerical code, and the JIT-Tax means it should only really be used for your heaviest functions (remember - profile!)
+**Always Use NumPy arrays!**
+- They're contiguous in memory and easy for Numba to understand
+
+### Even for Numba:
+
+<br>
+
+<img src="../images/list-array0meme.jpg" />
+
+:: right ::
+
+**Favour simple, explicit loops (opposite of NumPy, I know):**
+- These are easier of Numba to understand and for LLVM to optimise
+
+**Keep your functions small**
+- Numba can inline JIT'ed functions into other JIT'ed functions
+
+**Only use Numba where you need it**
+- Only use Numba for your heaviest numerical functions
+- Don't forget the JIT-Tax!
+
+**Basically, write your Python like Fortran...**
 
 ---
 layout: top-title-two-cols
@@ -586,31 +594,68 @@ color: cyan
 
 :: title ::
 
-## Bonus: Make Your Own NumPy UFuncs!
+## Bonus: Make Your Own NumPy Universal Functions!
 
 :: left ::
 
-You don't even have to write out the For Loops!
+Why bother writing all these For Loops?
+
+**All I care about is maths**
+
+Isn't it cool how you can give NumPy Universal Functions (ufuncs) basically anything?
+
+```python
+x = 5.
+y = np.array([1., 2., 3., 4., 5.])
+
+# All absolutely fine!
+np.divide(x, y) # scalar / array
+np.divide(y, x) # array / scalar
+np.divide(x, x) # scalar / scalar
+np.divide(y, y) # array / array
+```
+
+In my opinion, they're one of NumPy's coolest features
+
+<SpeechBubble position="l" color="sky" shape="round" maxWidth="100%">
+
+You even get all the <Link to="https://numpy.org/doc/stable/reference/ufuncs.html#ufunc" title="usual NumPy ufunc features" /> like reductions, accumulations, etc...
+
+</SpeechBubble>
 
 :: right ::
 
+With Numba, you can define your own custom ufuncs using `@vectorize`:
+
 ```python
-@numba.vectorize
-def add_5(x):
-  x += 5
+@vectorize("float64(float64, float64)")
+def safe_divide(x, y):
+    if y == 0.:
+        return 0.
+    else:
+        return x/y
+
+x = 5
+y = np.array([0,1,2,3,4,5])
+
+safe_divide(x, y) # [0., 5., 2.5, 1.66666667, 1.25, 1.]
 ```
 
-Can call it like:
-```python
-y = 10
-print(add_5(y)) # 15
-```
+Yes, unfortunately **function signatures** are required again, but this really lets you focus on the maths!
 
-Or like:
-```python
-y_array = np.array([1,2,3,4,5])
-print(add_5(y_array)) # [6,7,8,9,10]
-```
+All you need to do is write the **per element equation**
+
+---
+layout: quote
+color: cyan
+author: You, Probably
+---
+
+Zero effort and insane performance?
+
+<br>
+
+This sounds too good to be true...
 
 ---
 layout: top-title
@@ -623,14 +668,53 @@ color: cyan
 
 :: content ::
 
-Numba is amazing when applied to heavy, numerical workflows
+Numba is amazing when applied to heavy **numerical workflows**, but less amazing for other things:
+- **It isn't compatible with most libraries outside of NumPy**
+  - Even though it can't JIT other libraries, since you only JIT some functions you can still use them in the same codebase!
+  - E.g. you can use Pandas for your I/O and Numba for the expensive maths
+- **It doesn't even support all of NumPy**
+- **It doesn't work for string manipulation, I/O, etc...**
+- **Class/object support isn't perfect**
+  - `self` is a Python Object that Numba doesn't understand, so `@numba.jit` can't be applied to class methods directly
 
-Where is doesn't shine so much is:
-- It isn't compatible with most libraries outside of NumPy
-  - I can't JIT them, but since you pick what you can JIT you can still use them together!
-- It doesn't work for string manipulation, I/O, etc...
-- Class/object support isn't perfect
-  - `self` is a Python Object that Numba doesn't understand, so `@njit` can't be applied to class methods directly
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+:: title ::
+
+## Numba and NumPy - What's Supported?
+
+:: left ::
+
+### Supported
+
+Basically everything the average NumPy user needs:
+- Almost all of NumPy's types
+- Most of NumPy's fancy array indexing
+- Pretty much every NumPy function you've heard of:
+  - The ufuncs
+  - Stats/linear algebra/random functions
+
+<Link to="https://numba.readthedocs.io/en/stable/reference/numpysupported.html" title="Here's the full list of supported/unsupported features from Numba's A++ docs" />
+
+:: right ::
+
+### Unsupported
+
+Honestly, mostly just NumPy function **optional arguments**
+
+It often has the first 1-3 arguments supported, but not the **"advanced options"**
+
+<br>
+
+But why doesn't Numba support everything?
+
+NumPy is already compiled, and Numba can't call it directly
+
+**All of the NumPy functionality has actually been reimplemented by Numba's devs for JIT-ing**
+
 
 ---
 layout: top-title-two-cols
@@ -654,9 +738,15 @@ class Circle:
     return np.pi * self.radius**2
 ```
 
-`self` references are a problem for number, so we need to eliminate them
+`self` references are a problem for Numba, so we need to eliminate them
 
-(please pretend area is a heavy, expensive function)
+*Please pretend area is a heavy, expensive function*
+
+<SpeechBubble position="l" color="sky" shape="round" maxWidth="100%">
+
+There's also an experimental `@jitclass`, which not only compiles class functions but treats classes like C-style structs!
+
+</SpeechBubble>
 
 :: right ::
 
@@ -676,26 +766,29 @@ class JITCircle:
     return np.pi * radius**2
 ```
 
-`@staticmethod` is one option, if you'd still like the keep the logic local to the class. With this method, using an underscore at the start of the name helps hide it
+`@staticmethod` is an option if you still want the function in the class
 
-Depending on reusability/style preferences, you could also have your helper functions outside of the class entirely
+You can also keep your helper function outside of the class
 
 ---
-layout: top-title-two-cols
+layout: side-title
 color: cyan
 ---
 
 :: title ::
 
-## Working With Classes In Numba - Experimental JITClass
+## Section Summary
 
-:: left ::
+:: content ::
 
-:: right ::
+### In this section we have learnt:
 
----
-layout: top-title-two-cols
-color: cyan
----
-
-
+- Python doesn't have to be interpreted
+  - CPython is just one of many Python implementations
+- Numba is a Just-In-Time (JIT) Compiler for numerical Python and a subset of NumPy
+- When Numba can help improve performance
+  - Remember - don't JIT everything, the JIT-Tax is real!
+  - Only use it where it's needed **(measure!)**
+- How to use Numba
+  - The `@numba.jit` decorator and its flag `cache=True`
+  - The `@numba.vectorize` decorator
