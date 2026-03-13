@@ -314,7 +314,7 @@ for(int i = 0; i < 100; i++) {
 
 Single, **fused** loop
 
-Result/behaviour unchanges
+Result/behaviour unchanged
 
 Less overhead for executing loops **(faster!)**
 
