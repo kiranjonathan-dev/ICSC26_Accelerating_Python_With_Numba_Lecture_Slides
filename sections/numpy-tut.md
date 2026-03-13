@@ -286,9 +286,12 @@ x_list.append("Hello") # Fine and cheap
 
 <v-clicks>
 
-- Each number is stored as a bloated `PyObject` spread out in memory (discontiguous)
-- This does mean that you can mix different datatypes
-- And that appending to the array is typically cheap
+Designed for flexibility:
+- You can mix different datatypes
+- It's cheap to append to the array/resize
+
+But how?
+- Each number is stored as a bloated `PyObject`, all over the place in memory (discontiguous)
 
 </v-clicks>
 
@@ -313,8 +316,11 @@ x_array = np.append(x_array, 'Hello') # Expensive!
 
 <v-clicks>
 
+Designed for performance:
 - NumPy stores it as a strongly-typed, contiguous C-style array
-- Can only include one datatype, which NumPy will infer
+
+This comes at a cost:
+- Can only store one datatype (you choose or NumPy guesses)
   - You can check what NumPy chose with `x_array.dtype`
 - C array = no in-place appends
   - Appends always create new arrays (expensive)
