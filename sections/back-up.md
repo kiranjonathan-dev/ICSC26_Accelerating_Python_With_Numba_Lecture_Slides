@@ -143,3 +143,55 @@ np.sin(x_array, out=x_array) # out let's you specify the target output
 
 This is purely from a memory optimisation perspective, do not sacrifice readability if your performance is already good enough!
 
+---
+layout: top-title-two-cols
+color: cyan
+columns: is-7
+---
+
+:: title ::
+
+## The Many Faces of Python
+
+:: left ::
+
+<v-click>
+
+CPython is the reference implementation, but it's far from the only:
+
+</v-click>
+
+<v-click>
+
+- Cython
+- PyPy
+- Jython
+- MicroPython
+- Nuitka
+- And many, many more...
+
+</v-click>
+
+<br>
+
+<v-click>
+
+Today, we're going to be talking about **Numba**
+
+</v-click>
+
+:: right ::
+
+<v-click at=2>
+
+<img src="../images/Cython_logo.svg" width="70%" />
+
+<br>
+
+<img src="../images/pypy-logo.svg" width="70%" />
+
+<br>
+
+<img src="../images/jython.png" width="70%" />
+
+</v-click>
