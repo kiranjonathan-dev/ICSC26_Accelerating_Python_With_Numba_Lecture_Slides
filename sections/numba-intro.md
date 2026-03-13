@@ -756,7 +756,6 @@ I promised you that Numba would handle all of your typing for you
 
 <v-clicks>
 
-- As we've seen, most of the time this is true
 - Numba's type inference works really well, **on average**
 - In certain cases, such as this one, it just needs some help
 
@@ -790,8 +789,7 @@ fibonacci_jit = numba.jit("int64(int64)")(naive_fibonacci)
 <v-click>
 
 Now, for performance we get:
-- **791ms**
-- **~18x speedup** over the original function
+- **791ms** - That's **~18x speedup** 
 
 </v-click>
 
@@ -809,6 +807,16 @@ fibonacci_jit = numba.jit(["int32(int32)", "int64(int64)",...])
 Just make sure you put the **most specific first**
 
 (32 bit before 64 bit, int before float, etc...)
+
+</v-click>
+
+<v-click>
+
+<Admonition title="Specify All Signatures You Want!" color="amber-light" width="100%">
+
+If you specify one or more function signatures, Numba will not infer new signatures! If you only specify "int64(int64)", your floats will be treated as ints!
+
+</Admonition>
 
 </v-click>
 
@@ -1027,7 +1035,7 @@ Basically everything the average NumPy user needs:
 
 </v-clicks>
 
-<v-click at=10>
+<v-click at=11>
 
 <Link to="https://numba.readthedocs.io/en/stable/reference/numpysupported.html" title="Here's the full list of supported/unsupported features from Numba's A++ docs" />
 
