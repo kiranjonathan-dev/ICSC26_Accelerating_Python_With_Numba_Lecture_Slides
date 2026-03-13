@@ -18,7 +18,7 @@ color: yellow
 
 <v-click>
 
-NumPy is THE package for numerical/scientific computing in Python.
+NumPy is THE package for numerical/scientific computing in Python
 
 </v-click>
 
@@ -41,7 +41,13 @@ It's incredibly fast, with a mostly C/C++ backend, and provides features like:
 
 <v-click at=1>
 
-<img src="../images/NumPy_logo_2020.svg" />
+<img src="../images/NumPy_logo_2020.svg" width="70%"/>
+
+</v-click>
+
+<v-click at=6>
+
+<img src="../images/particle-physicist-mc-meme.jpg" width="50%"/>
 
 </v-click>
 
@@ -66,12 +72,16 @@ Let's make this perfectly clear:
 
 - This talk is about Numba, but that's not my first choice for optimisation
 - I will **ALWAYS** check that I'm properly using NumPy before reaching for Numba
-- NumPy is written in C/C++ and has very little overheads
-- It's also written by some amazingly talented programmers
+- NumPy is written in C/C++ (by some very talented people) and has very little overheads
 - If NumPy can do it already, you almost certainly can't do it better
-- Even if you do need Numba, Numba and NumPy work amazingly together!
 
 </v-clicks>
+
+<v-click>
+
+Even if you do need Numba, Numba and NumPy work amazingly together!
+
+</v-click>
 
 <br>
 
@@ -419,13 +429,17 @@ color: yellow
 
 <v-click>
 
-If NumPy converting the Python list to a NumPy array is why NumPy was slower, did I not just cheat with updated benchmarks?
+If converting from list to NumPy array was what was slow, did I just cheat by moving that out of the timing area?
 
 </v-click>
 
 <v-click>
 
 Kind of! If we do include the array creation:
+
+</v-click>
+
+<v-click>
 
 ### For Loop + List:
 ```python
@@ -480,9 +494,9 @@ np_mean(x_array)
 
 That puts our actual speedup at **~15x**
 
-But if you're loading data from files libraries will often hand you NumPy arrays directly
+The more you operate on that array, the better your speed up will get!
 
-Also, the more you operate on that array, the better your speed up will get!
+Also, if you're loading data from files most libraries use NumPy arrays already!
 
 <Link to="numpy-inits" title="More Examples of NumPy Array Initialisations Here" />
 
@@ -519,7 +533,7 @@ def mc_pi(n_samples):
 <v-clicks>
 
 - Sin 1: Pure Python For Loop
-- Sin 2: NumPy functions operating per element
+- Sin 2: NumPy functions not operating on arrays
 
 </v-clicks>
 
