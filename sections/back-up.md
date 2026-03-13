@@ -1,6 +1,6 @@
 ---
 layout: section
-hideintoc: True
+hideInToc: True
 color: red
 ---
 
