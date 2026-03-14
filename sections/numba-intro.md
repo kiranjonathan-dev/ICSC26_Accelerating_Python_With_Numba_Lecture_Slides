@@ -537,7 +537,7 @@ Previously we had two implementations:
 ```python
 def mc_pi(n_samples):
     n_samples_inside = 0
-    for i in prange(n_samples):
+    for i in range(n_samples):
         x = np.random.random() 
         y = np.random.random()
         if x**2 + y**2 <= 1:
