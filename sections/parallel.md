@@ -124,10 +124,12 @@ np_sin2_jit = jit()(np_sin2)
 
 **76.4ms** (very similar)
 
+<br>
+
+Luckily, Numba can parallelise a lot of NumPy's array operations, ufuncs, and other functions!
 
 :: right ::
 
-Numba is able to parallelise a lot of NumPy's array operations, ufuncs, and other functions
 
 It's as simple as adding the `parallel=True` flag
 
@@ -162,9 +164,41 @@ color: indigo
 
 ### Naive Python For Loop
 
+```python
+def python_sin2(x):
+    sin2 = np.empty(len(x))
+
+    for i in range(len(x)):
+        sin2[i] = np.sin(x[i])**2
+
+    return sin2
+```
+
+**XXms**
+
+Once again, we apply `@numba.jit(parallel=True)`
+
 :: right ::
 
 ### Numba Parallel `prange`
+
+```python
+@numba.jit(parallel=True)
+def python_sin2(x):
+    sin2 = np.empty(len(x))
+
+    for i in numba.prange(len(x)): # range -> prange
+        sin2[i] = np.sin(x[i])**2
+
+    return sin2
+```
+
+**XXms - XX Speedup**
+
+We also have to swap our `range()` for a `numba.prange`
+
+- This tells Numba that the loop is safe to parallelise
+- It then divides the range across the threads for computation!
 
 ---
 layout: top-title-two-cols
@@ -175,6 +209,82 @@ color: indigo
 
 ## Caution - Numba Can't Save You From Race Conditions!
 
+:: left ::
+
+Sadly, we haven't had time to go over parallel theory
+- That's its own lecture series!
+
+**One thing I have to warn you about though is race conditions!**
+
+Take this code here:
+
+```python
+@numba.jit(parallel=True)
+def race_array():
+  array = np.zeros(100)
+  for i in prange(len(array)):
+      array[0] += 1 # Multiple loop iterations modify array[0]
+  return array[0]
+```
+
+It's incredibly dangerous, and can give you **hard to reproduce, annoying bugs!**
+
+That's because it includes a **race condition**
+
+:: right ::
+
+The simple instruction `array[0] += 5`
+
+Looks more like:
+```sh
+read array[0]
+add array[0],5
+write array[0]
+```
+
+If multiple threads do this on the same element, at the same time, they may happen out of order and give you different answers!
+
+<br>
+
+### Golden rule for race conditions:
+
+**Separate iterations of a `prange` should never access the same array element!**
+
+---
+layout: top-title-two-cols
+color: indigo
+---
+
+:: title ::
+
+## But It Can Do Automatic Reductions!
+
+:: left ::
+
+Take a function like this:
+
+```python
+@numba.jit(parallel=True)
+def simple_reduction(array):
+  sum = 0
+  for i in numba.prange(len(array)):
+    sum += array[i] # Numba can handle reductions into scalars!
+  return sum
+```
+
+Naively, each thread accumulating into `sum` should create a race condition!
+
+:: right ::
+
+Luckily, Numba handle's common reductions for us:
+- It can see you're reducing into a scalar
+- Each thread will store its own copy
+- They'll be combined at the end in a thread-safe manner
+
+<br>
+
+<Link to="https://numba.readthedocs.io/en/stable/user/parallel.html#explicit-parallel-loops" title="You can find out exactly what operations are/aren't supported in Numba's docs!" />
+
 ---
 layout: top-title-two-cols
 color: indigo
@@ -184,6 +294,52 @@ color: indigo
 
 ## Our Very Own ufunc - Now Faster!
 
+:: left ::
+
+### Original ufunc
+
+```python
+@vectorize("float64(float64, float64)")
+def safe_divide(x, y):
+    if y == 0.:
+        return 0.
+    else:
+        return x / y
+```
+
+We can take our ufunc and add `target="parallel"` to the `@vecotrize` decorator
+
+This takes us from **XXms**
+
+:: right ::
+
+### Parallel ufunc!
+
+```python
+@vectorize("float64(float64, float64)", target="parallel")
+def safe_divide(x, y):
+    if y == 0.:
+        return 0.
+    else:
+        return x / y
+```
+
+To **XXms**
+
+Some more free performance!
+
+<br>
+
+<SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
+
+*Pssst*, there's also a `target="CUDA"` option!
+
+<br>
+
+We don't have time for GPU stuff today but I'll let your imagine run wild on that!
+
+</SpeechBubble>
+
 ---
 layout: top-title-two-cols
 color: indigo
@@ -192,6 +348,52 @@ color: indigo
 :: title ::
 
 ## Monte Carlo Pi Revisited: A New Champion
+
+:: left ::
+
+
+Previously we had two implementations:
+
+
+### Naive Python:
+
+```python
+def mc_pi(n_samples):
+    n_samples_inside = 0
+    for i in numba.prange(n_samples): # Now a prange!
+        x = np.random.random() 
+        y = np.random.random()
+        if x**2 + y**2 <= 1:
+            n_samples_inside += 1
+    return 4 * n_samples_inside / n_samples
+```
+
+### NumPy Rewrite:
+
+```python
+def mc_pi_np(n_samples):
+    xs = np.random.random(n_samples)
+    ys = np.random.random(n_samples)
+    r_sqs = xs**2 + ys**2
+    n_samples_inside = np.sum(r_sqs <= 1)
+    return 4 * n_samples_inside / n_samples
+```
+
+:: right ::
+
+Both of these work with `@jit(parallel=True)`!
+
+The naive Python version just needs a `prange` added!
+
+Final performance rankings:
+
+| | **Python** | **NumPy** |
+|-|-|-|
+| No JIT | XXms | XXms |
+| `@jit` |XXms | XXms |
+| `@jit(parallel=True)` |XXms | XXms |
+
+Parallel version are joint winners! We beat NumPy at its own game!
 
 ---
 layout: top-title-two-cols
@@ -205,9 +407,8 @@ columns: is-7
 
 :: left ::
 
-### Speedup Over Plain NumPy:
 
-<img src="../images/mc_pi_bench_placeholder.png" />
+<img src="../images/mc-pi-bench-with-title.png" />
 
 Below the dotted line is a slow down from NumPy!
 
@@ -216,11 +417,11 @@ Below the dotted line is a slow down from NumPy!
 Some observations:
 
 - **Problem size matters, always measure!**
-- Simple `@jit` is the winner for small problems but loses for large problems
-- `parallel=True` starts slow (thread overheads), but wins for large problems
-- Very interesting, `parallel=True` with 1 thread always beats NumPy and simple `@jit`
+- Make sure your performance tests are representative of your use case!
+- Simple `@jit` is best for small problems
+- `parallel=True` shines for large problems
 
-Why is parallel with 1 thread different to a normal `@jit`?
+Why is `parallel=True` with 1 thread always faster than NumPy? A normal `@jit` (which also uses 1 thread) isn't?
 
 ---
 layout: top-title-two-cols
@@ -231,14 +432,64 @@ color: indigo
 
 ## Numba's Parallel Optimisations - Loop Fusion Is Back!
 
+:: left ::
+
+Numba's parallel version with 1 thread is faster than Numba's simple `@numba.jit`, because it is compiled differently:
+- Functions with `parallel=True` go through Numba's **additional optimisation step**
+- This includes extra compiler optimisations, e.g.:
+  - **Loop Fusion!**
+
+Our NumPy Monte Carlo had lots of easy gains:
+- 5 duplicated loops!
+- 4 intermediate arrays that could just be loops!
+
+**The optimisation saves on memory and runtime!**
+
+:: right ::
+
+We can ask Numba for some info on its optimisation:
+```python
+mc_pi_np_jit_par.parallel_diagnostics(level=1)
+```
+
+<br>
+
+At level 1 (least verbose), you'll get:
+
+<img src="../images/parallel-diagnostics.png" />
+
 ---
 layout: top-title-two-cols
 color: indigo
+columns: is-5
 ---
 
 :: title ::
 
 ## Final Comments On Performance and Safety
+
+:: left ::
+
+### Performance
+
+- The jump from NumPy to `@jit(parallel=True)` is modest, and never more than your CPU count!
+- The real gains come going from Python to serial NumPy/Numba!
+- Only use parallel computing when you need it:
+  - Make sure you **measure**
+  - **And make sure you measure with different thread counts/problem sizes!**
+
+:: right ::
+
+### Safety
+
+- We didn't have time for parallel theory
+  - I feel like I've given you a weapon without a safety!
+- **If you've done parallel computing before:**
+  - <Link to="https://numba.readthedocs.io/en/stable/user/parallel.html" title="Numba's docs have the details you need" />
+- **If you haven't:**
+  - Be careful, parallel bugs are the worst as they don't always happen
+  - For safety, stick to parallelising NumPy functions, loops only over `array[i]`, and simple reductions!
+- **Make sure you test your code!**
 
 ---
 layout: side-title
@@ -253,8 +504,13 @@ color: indigo
 
 In this section we have learnt:
 
-<!-- Need to write some slides on race conditions/the theory behind parallel computing/words of warning, basically -->
-<!---->
-<!-- This will include a recommendation to basically not use parallel unless the situation really calls for it -->
-<!---->
-<!-- I will also recommend using NumPy vector functions and letting Numba parallelise that over pranges, if you're not super familiar with parallelism -->
+- Numba supports parallelism in many different ways:
+  - With `@jit(parallel=True)`
+  - With `@vectorize(target="parallel")`
+  - With cool CUDA stuff (that we didn't get to cover)
+- Within its parallelism, Numba can:
+  - Automatically parallelise NumPy functions
+  - Parallelise our own `prange`s
+  - Perform simple reductions automatically
+- But, we should only resort to parallelism when we **absolutely need it**
+- As always, **measure and test!**
