@@ -76,6 +76,10 @@ color: sky
 Can't think of any right now? Feel free to reach out to me after the session:
 <Email v="kiran.jonathan@stfc.ac.uk" color="orange"/>
 
+<br>
+
+**Many thanks to my iCSC mentor, Andrzej, for all of his help and advice!**
+
 ---
 src: ./sections/back-up.md
 ---
