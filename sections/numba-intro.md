@@ -68,48 +68,14 @@ Simple answer? Compiling Python scripts as they are is very hard:
 
 - Dynamic typing makes compilation difficult, and optimised compilation almost impossible
 - Huge number of libraries written in different low-level languages would be hard to interface with
-- Full compatibility in general is hard to approach, because Python was simply not designed with compilation in mind
+- Full compatibility is hard
+- Python just wasn't designed for compilation
 
 </v-clicks>
 
 <v-click>
 
-**Python themselves haven't done it because the changes it requires often makes Python lose its Python-ness**
-
-</v-click>
-
-<v-click>
-
-But that doesn't mean people haven't tried...
-
-</v-click>
-
----
-layout: top-title-two-cols
-color: cyan
-columns: is-7
----
-
-:: title ::
-
-## The Many Faces of Python
-
-:: left ::
-
-<v-click>
-
-CPython is the reference implementation, but it's far from the only:
-
-</v-click>
-
-<v-click>
-
-- Cython
-- PyPy
-- Jython
-- MicroPython
-- Nuitka
-- And many, many more...
+If it didn't require un-pythonic code changes, Python would just ship that way!
 
 </v-click>
 
@@ -117,23 +83,7 @@ CPython is the reference implementation, but it's far from the only:
 
 <v-click>
 
-Today, we're going to be talking about **Numba**
-
-</v-click>
-
-:: right ::
-
-<v-click at=2>
-
-<img src="../images/Cython_logo.svg" width="70%" />
-
-<br>
-
-<img src="../images/pypy-logo.svg" width="70%" />
-
-<br>
-
-<img src="../images/jython.png" width="70%" />
+Whilst compiling **all of Python** is quite difficult, we don't need to speed up **everything**
 
 </v-click>
 
@@ -145,6 +95,92 @@ author: Numba Website
 
 Numba is an open source **JIT compiler** that translates a **subset of Python and NumPy code** into fast machine code. 
 
+---
+layout: top-title-two-cols
+color: cyan
+columns: is-7
+---
+
+:: title ::
+
+## The General Idea Behind Numba
+
+:: left ::
+
+### What is Just-In-Time (JIT) Compilation?
+
+- Previously, we talked about **Ahead-Of-Time (AOT) compilation**
+  - The **whole program** is compiled before running
+- **Just-In-Time Compilation** is quite different:
+  - Code is only compiled **when it's needed**
+  - Since this happens during runtime, the compiler gets extra information:
+    - What types you're calling a function with
+    - The CPU/hardware you're using
+    - It essentially has **all** the info
+
+:: right ::
+
+### Why only a subset of Python/NumPy?
+
+- Python as a whole is basically too dynamic to compile
+- For science, the maths tends to be the slowest part
+- Maths functions are often small, with mostly static types (`float`, `int`, etc...)
+
+If we focus on compiling these parts of Python, it'll be easier and we can still get good speedup **(remember - prioritise!)**
+
+---
+layout: top-title-two-cols
+color: cyan
+columns: is-7
+---
+
+:: title ::
+
+## How Numba Works
+
+:: left ::
+
+<v-click>
+
+### Just-In-Time (JIT) Compilation:
+### Compilation Right When You Need It
+
+<br>
+
+<img src="../images/numba-diagram.png" />
+
+</v-click>
+
+:: right ::
+
+<v-click>
+
+### Type Inference Example:
+
+```python
+def simple_func(x):
+  y = x + 5
+  return y * 2
+
+simple_func(10) # Called with int
+
+# Let's figure out the types
+def simple_func(x): # x = 10 = int
+  y = x + 5 # y = int + int = int
+  return y * 2 # return = int * int = int
+
+# Success!
+```
+
+</v-click>
+
+<br>
+
+<v-click>
+
+**Since Numba can infer the types for us, we can get all the benefit without the effort!**
+
+</v-click>
 ---
 layout: top-title-two-cols
 color: cyan
@@ -194,44 +230,6 @@ columns: is-6
 
 </v-click>
 
----
-layout: top-title-two-cols
-color: cyan
-columns: is-8
----
-
-:: title ::
-
-## How Numba Works
-
-:: left ::
-
-<v-click>
-
-### Just-In-Time (JIT) Compilation:
-### Compilation Right When You Need It
-
-<br>
-
-<img src="../images/numba-diagram.png" />
-
-</v-click>
-
-:: right ::
-
-<v-click>
-
-We've learnt that we need **static types** to generate **optimised machine code**
-
-</v-click>
-
-<br>
-
-<v-click>
-
-**Since Numba can infer the types for us, we can get all the benefit without the effort!**
-
-</v-click>
 
 ---
 layout: top-title-two-cols
@@ -249,12 +247,14 @@ color: cyan
 ### Slow Python For Loop
 
 ```python
-def slow_python(array):
-  for i in range(len(array)):
-    array[i] += 5
+def my_slow_python(num_points):
+  sum = 0
+  for i in range(num_points):
+    sum += i
+  return sum
 ```
 
-**23.4ms**
+**XXms**
 
 </v-click>
 
@@ -278,12 +278,14 @@ Simply import numba and add `@numba.jit`
 import numba
 
 @numba.jit
-def my_first_jit(array):
-  for i in range(len(array)):
-    array[i] += 5
+def my_first_jit(num_points):
+  sum = 0
+  for i in range(num_points):
+    sum += i
+  return sum
 ```
 
-**90.6ns (~260,000x) Speedup**
+**XXms - XXx Speedup**
 
 </v-click>
 
@@ -295,6 +297,32 @@ def my_first_jit(array):
 
 </v-click>
 
+<!-- --- -->
+<!-- layout: top-title-two-cols -->
+<!-- color: cyan -->
+<!-- --- -->
+<!---->
+<!-- :: title :: -->
+<!---->
+<!-- ## @numba.jit - A Bit More Detail -->
+<!---->
+<!-- :: left :: -->
+<!---->
+<!-- <v-click> -->
+<!---->
+<!-- The core feature of Numba is its `@jit` decorator: -->
+<!---->
+<!-- </v-click> -->
+<!---->
+<!-- <v-clicks> -->
+<!---->
+<!-- - Functions with the decorator are JIT compiled the first time they're called with certain types -->
+<!-- - If they're called again with the same types, they'll reuse the existing compilation -->
+<!--   - This is basically the same as calling compiled code through NumPy -->
+<!-- - If you call it with different types that are incompatible, Numba will just JIT compile you a new version of the function! -->
+<!---->
+<!-- </v-clicks> -->
+<!---->
 ---
 layout: top-title-two-cols
 color: cyan
@@ -302,37 +330,13 @@ color: cyan
 
 :: title ::
 
-## @numba.jit - A Bit More Detail
+## Aside: Decorators in Python
 
 :: left ::
 
 <v-click>
 
-The core feature of Numba is its `@jit` decorator:
-
-</v-click>
-
-<v-clicks>
-
-- Functions with the decorator are JIT compiled the first time they're called with certain types
-  - E.g. the first time you might call your function with `int` vars
-  - The second time you might call them with `float` vars
-- From that point, any calls to that function are like calls to NumPy's optimised compiled functions
-
-</v-clicks>
-
-<v-click>
-
-**There are also multiple ways to apply decorators in Python**
-
-</v-click>
-
-:: right ::
-
-<v-click>
-
 ### Directly on Function
-### (Best For Production)
 
 ```python
 @numba.jit
@@ -343,14 +347,16 @@ def my_first_jit(num_points):
   return sum
 ```
 
+- The "normal" way of using decorators
+- Best choice for your final code
+
 </v-click>
 
-<br>
+:: right ::
 
 <v-click>
 
 ### From Another Function
-### (Best For Time Comparisons)
 
 ```python
 def my_slow_python(num_points):
@@ -360,9 +366,17 @@ def my_slow_python(num_points):
   return sum
  
 my_first_jit = numba.jit()(my_slow_python)
+# Don't forget the weird empty brackets!
 ```
 
+- Useful for time comparisons between pure Python/Numba
+- You don't have to copy/paste functions all the time to compare!
+
 </v-click>
+
+:: default ::
+
+**There are also multiple ways to apply decorators in Python**
 
 ---
 layout: top-title-two-cols
@@ -390,31 +404,25 @@ my_first_jit = jit()(my_slow_python)
 
 You may get a message like this:
 
-INSERT IMAGE OF TIMEIT MESSAGE
+```console
+The slowest run took 477045.46 times 
+longer than the fastest. 
+
+This could mean that an intermediate 
+result is being cached.
+```
 
 </v-click>
 
 <v-click>
 
-That's because it takes time to compile the function the first time you call it
+That's because the function is compiled the first time you call it
 
 </v-click>
 
 <v-click>
 
 **Compilation is not free!**
-
-</v-click>
-
-<v-click at=9>
-
-<Admonition title="Warning For Manual Timing" color="amber-light" width="100%">
-
-If you're not using `%timeit` and are manually timing your functions, make sure you always measure (at least) twice
-
-The first time will give you time including compilation, and the second time will give you the pure execution time
-
-</Admonition>
 
 </v-click>
 
@@ -804,21 +812,69 @@ fibonacci_jit = numba.jit(["int32(int32)", "int64(int64)",...])
 
 <v-click>
 
-Just make sure you put the **most specific first**
-
-(32 bit before 64 bit, int before float, etc...)
-
-</v-click>
-
-<v-click>
+<br>
 
 <Admonition title="Specify All Signatures You Want!" color="amber-light" width="100%">
 
 If you specify one or more function signatures, Numba will not infer new signatures! If you only specify "int64(int64)", your floats will be treated as ints!
 
+Just make sure you put the **most specific first**
+(32 bit before 64 bit, int before float, etc...)
+
 </Admonition>
 
 </v-click>
+
+---
+layout: top-title-two-cols
+color: cyan
+---
+
+:: title ::
+
+## Typing in Numba - A Warning
+
+:: left ::
+
+While we're on the topic of typing:
+- Numba is quite good at guessing types
+- But types actually need to be guessable
+
+At the end of the day, Numba is **statically typed** like C/C++
+- Variables should not change types in your functions
+- You should always return the same type
+
+<SpeechBubble position="l" color="sky" shape="round" maxWidth="100%">
+
+Bonus typing tip, you can check Numba's inference with:
+
+`your_function.inspect_types()`
+
+</SpeechBubble>
+
+:: right ::
+
+Different return types like this:
+
+```python
+@jit
+def different_returns(x):
+    if x < 0:
+        return "Oh no, negative!" # string
+    else:
+        return 1.5 # float
+
+different_returns(-1)
+```
+
+Will give an error like this:
+```console
+TypingError: Failed in nopython mode 
+pipeline (step: nopython frontend)
+Can't unify return type from the following types: 
+Literal[str](Oh no, negative!), float64
+```
+
 
 ---
 layout: top-title-two-cols
@@ -870,12 +926,6 @@ columns: is-5
 **Only use Numba where you need it**
 - Only use Numba for your heaviest numerical functions
 - Don't forget the JIT-Tax!
-
-</v-click>
-
-<v-click>
-
-**Basically, write your Python like Fortran...**
 
 </v-click>
 
@@ -994,8 +1044,9 @@ Numba is amazing when applied to heavy **numerical workflows**, but less amazing
 
 - **It isn't compatible with most libraries outside of NumPy**
   - Even though it can't JIT other libraries, since you only JIT some functions you can still use them in the same codebase!
-  - E.g. you can use Pandas for your I/O and Numba for the expensive maths
 - **It doesn't even support all of NumPy**
+  - (But it does support basically everything you'll care about)
+  - <Link to="https://numba.readthedocs.io/en/stable/reference/numpysupported.html" title="The Numba docs cover this really well" />
 - **It doesn't work for string manipulation, I/O, etc...**
 - **Class/object support isn't perfect**
   - `self` is a Python Object that Numba doesn't understand, so `@numba.jit` can't be applied to class methods directly
@@ -1009,79 +1060,7 @@ color: cyan
 
 :: title ::
 
-## Numba and NumPy - What's Supported?
-
-:: left ::
-
-<v-click>
-
-### Supported
-
-</v-click>
-
-<v-click>
-
-Basically everything the average NumPy user needs:
-
-</v-click>
-
-<v-clicks>
-
-- Almost all of NumPy's types
-- Most of NumPy's fancy array indexing
-- Pretty much every NumPy function you've heard of:
-  - The ufuncs
-  - Stats/linear algebra/random functions
-
-</v-clicks>
-
-<v-click at=11>
-
-<Link to="https://numba.readthedocs.io/en/stable/reference/numpysupported.html" title="Here's the full list of supported/unsupported features from Numba's A++ docs" />
-
-</v-click>
-
-:: right ::
-
-<v-click>
-
-### Unsupported
-
-</v-click>
-
-<v-click>
-
-Honestly, mostly just NumPy function **optional arguments**
-
-It often has the first 1-3 arguments supported, but not the **"advanced options"**
-
-</v-click>
-
-<br>
-
-<v-clicks>
-
-<SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
-
-But why doesn't Numba support everything?
-
-</SpeechBubble>
-
-NumPy is already compiled, and Numba can't call it directly
-
-**All of the NumPy functionality has actually been reimplemented by Numba's devs for JIT-ing**
-
-
-</v-clicks>
-
----
-layout: top-title-two-cols
-color: cyan
----
-
-:: title ::
-
-## Working With Classes In Numba - Manual Method
+## Aside: Working With Classes In Numba
 
 :: left ::
 
@@ -1172,13 +1151,12 @@ color: cyan
 <v-clicks>
 
 - Python doesn't have to be interpreted
-  - CPython is just one of many Python implementations
-- Numba is a Just-In-Time (JIT) Compiler for numerical Python and a subset of NumPy
+  - Numba is a Just-In-Time (JIT) Compiler for numerical Python and a subset of NumPy
 - When Numba can improve performance
   - Perfect for expensive numerical loops
   - Remember - don't JIT everything, the JIT-Tax is real **(measure!)**
 - How to use Numba
-  - The `@numba.jit` decorator and its flag `cache=True`
+  - The `@numba.jit` decorator
   - Creating ufuncs with `@numba.vectorize`
 
 </v-clicks>
