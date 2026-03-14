@@ -81,5 +81,38 @@ Can't think of any right now? Feel free to reach out to me after the session:
 **Many thanks to my iCSC mentor, Andrzej, for all of his help and advice!**
 
 ---
+layout: top-title-two-cols
+color: sky
+---
+
+:: title ::
+
+## Quick Info On Exercises
+
+:: left ::
+
+### For people in the room:
+
+- The exercises will be run **today** (Tuesday 17th) at **4:30pm - 5:30pm**
+- They will be taking place in **513/1-024, CERN**
+- Full details are available on the Indico!
+
+### QR Code for exercises:
+
+INSERT QR CODE HERE
+
+You can also find the link on the Indico!
+
+:: right ::
+
+### For people watching online:
+
+- You can't attend the exercise class, but you can still do the exercises!
+- They're a set of Jupyter Notebooks with lots of information/instructions
+- If you do get stuck/have any questions:
+  - <Email v="kiran.jonathan@stfc.ac.uk" color="sky"/>
+  - I might not reply until after the school though!
+
+---
 src: ./sections/back-up.md
 ---
