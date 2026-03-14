@@ -280,9 +280,9 @@ def slow_python(array):
 <v-click>
 
 ```python
-@njit(parallel=True)
+@jit(parallel=True)
 def fast_numba(array):
-  for i in prange(len(array)):
+  for i in numba.prange(len(array)):
     array[i] += 5
 ```
 
