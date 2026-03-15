@@ -536,8 +536,6 @@ a = True # boolean
 arr = np.array() # NumPy Array
 df = pd.DataFrame() # Pandas DataFrame
 obj = MyClass() # Custom User MyClass Object
-
-# NOTE TO SELF, REPLACE WITH ACTUAL PYTHON TYPE OUTPUT
 ```
 
 </v-click>
