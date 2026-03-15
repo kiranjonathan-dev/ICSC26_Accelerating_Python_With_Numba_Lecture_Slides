@@ -201,8 +201,8 @@ In the previous example, I ran the timings like this:
 # Generate Python List with 1,000,000 elements
 x_list = list(range(1_000_000))
 
-%timeit naive_mean(x_list) # 352ms
-%timeit np_mean(x_list) # 423ms
+%timeit naive_mean(x_list) # 136ms
+%timeit np_mean(x_list) # 171ms
 ```
 
 </v-click>
@@ -225,7 +225,7 @@ Both the For Loop and NumPy mean were being run on a Python list
 
 <v-click>
 
-If I instead run my test like this:
+If I instead run my NumPy mean on a NumPy array:
 
 ```python
 # Generate Python List with 1,000,000 elements
@@ -256,7 +256,7 @@ That's **~25x Speedup** - now that's what we want!
 
 <v-click>
 
-**Why is it so different with a NumPy array?**
+**But, why is it so different with a NumPy array?**
 
 </v-click>
 
