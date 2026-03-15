@@ -99,7 +99,7 @@ color: sky
 
 ### Exercise Repo (Link on Indico):
 
-<img src="../images/exercises_qr.png" width="40%" />
+<img src="./images/exercises_qr.png" width="40%" />
 
 <Link to="https://github.com/kiranjonathan-dev/ICSC26_Accelerating_Python_With_Numba_Exercise_Repo" title="Link to exercises" />
 
