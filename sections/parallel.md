@@ -119,7 +119,7 @@ def np_sin2(x):
 ### Serial JIT Version
 
 ```python
-np_sin2_jit = jit()(np_sin2)
+np_sin2_jit = numba.jit()(np_sin2)
 ```
 
 **69.5ms** (very similar)
