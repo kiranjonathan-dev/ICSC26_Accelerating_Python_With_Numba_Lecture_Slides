@@ -116,8 +116,14 @@ The general idea is as follows:
 
 </v-click>
 
-
 <v-click at=2>
+
+Common examples of compiled languages are C, C++, Rust, and Fortran
+
+</v-click>
+
+
+<v-click at=3>
 
 In practice:
 
@@ -131,12 +137,6 @@ g++ my_code.cpp -o my_exec
 ./my_exec
 - Hello iCSC!
 ```
-
-</v-click>
-
-<v-click at=3>
-
-Common examples of compiled languages are C, C++, Rust, and Fortran
 
 </v-click>
 
@@ -175,8 +175,13 @@ The general idea is as follows:
 
 </v-click>
 
-
 <v-click at=2>
+
+Common examples of interpreted languages are Python, Bash, Ruby, and Perl
+
+</v-click>
+
+<v-click at=3>
 
 In practice:
 ```bash
@@ -187,12 +192,6 @@ python my_script.py
 - Hello iCSC!
 # `python` is the executable that your CPU can actually run!
 ```
-
-</v-click>
-
-<v-click at=3>
-
-Common examples of interpreted languages are Python, Bash, Ruby, and Perl
 
 </v-click>
 
