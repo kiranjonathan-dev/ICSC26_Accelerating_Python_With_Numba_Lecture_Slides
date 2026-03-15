@@ -262,13 +262,14 @@ color: sky
 <v-click>
 
 ```python
-
-def slow_python(array):
-  for i in range(len(array)):
-    array[i] += 5
+def slow_python_mean(array):
+    sum = 0
+    for i in range(len(array)):
+        sum += array[i]
+    return sum
 ```
 
-### 1.23s
+### 557s
 
 </v-click>
 
@@ -280,13 +281,15 @@ def slow_python(array):
 <v-click>
 
 ```python
-@jit(parallel=True)
-def fast_numba(array):
-  for i in numba.prange(len(array)):
-    array[i] += 5
+@numba.jit(parallel=True)
+def fast_numba_mean(array):
+    sum = 0
+    for i in numba.prange(len(array)):
+        sum += array[i]
+    return sum
 ```
 
-### 3.24ms
+### 1.03ms
 
 </v-click>
 
@@ -302,7 +305,7 @@ def fast_numba(array):
 
 <v-click at=3>
 
-## You're not dreaming, that's ~380x speedup for zero effort*
+## You're not dreaming, that's ~540x speedup for zero effort*
 
 *For this ideal toy example :)
 

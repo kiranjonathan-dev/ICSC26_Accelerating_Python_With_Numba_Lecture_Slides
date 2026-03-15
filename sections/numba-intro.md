@@ -247,14 +247,15 @@ color: cyan
 ### Slow Python For Loop
 
 ```python
-def my_slow_python(num_points):
-  sum = 0
-  for i in range(num_points):
-    sum += i
-  return sum
+def sum_first_N_integers(N):
+    sum = 0
+    for i in range(1, N+1):
+        sum += i
+    return sum
+
 ```
 
-**XXms**
+**187ms**
 
 </v-click>
 
@@ -275,17 +276,15 @@ Simply import numba and add `@numba.jit`
 ### Fast Numba JIT Loop
 
 ```python
-import numba
-
 @numba.jit
-def my_first_jit(num_points):
-  sum = 0
-  for i in range(num_points):
-    sum += i
-  return sum
+def sum_first_N_integers_jit(N):
+    sum = 0
+    for i in range(1, N+1):
+        sum += i
+    return sum
 ```
 
-**XXms - XXx Speedup**
+**89.1ns - 2,000,000x Speedup**
 
 </v-click>
 
@@ -340,11 +339,11 @@ color: cyan
 
 ```python
 @numba.jit
-def my_first_jit(num_points):
-  sum = 0
-  for i in range(num_points):
-    sum += i
-  return sum
+def sum_first_N_integers_jit(N):
+    sum = 0
+    for i in range(1, N+1):
+        sum += i
+    return sum
 ```
 
 - The "normal" way of using decorators
@@ -359,13 +358,13 @@ def my_first_jit(num_points):
 ### From Another Function
 
 ```python
-def my_slow_python(num_points):
+def sum_first_N_integers(N):
   sum = 0
-  for i in range(num_points):
-    sum += i
+  for i in range(1, N+1):
+      sum += i
   return sum
- 
-my_first_jit = numba.jit()(my_slow_python)
+
+sum_first_N_integers_jit = numba.jit()(sum_first_N_integers)
 # Don't forget the weird empty brackets!
 ```
 
@@ -394,8 +393,8 @@ color: cyan
 If you were to work through that last example yourself, and time it:
 
 ```python
-my_first_jit = jit()(my_slow_python)
-%timeit my_first_jit(1_000_000)
+sum_first_N_integers_jit = numba.jit()(sum_first_N_integers)
+%timeit my_first_jit(10_000_000)
 ```
 
 </v-click>
@@ -405,7 +404,7 @@ my_first_jit = jit()(my_slow_python)
 You may get a message like this:
 
 ```console
-The slowest run took 477045.46 times 
+The slowest run took 20.46 times 
 longer than the fastest. 
 
 This could mean that an intermediate 
@@ -532,7 +531,7 @@ Previously we had two implementations:
 
 <v-click>
 
-### Naive Python **(8.75s)**:
+### Naive Python **(4.11s)**:
 
 ```python
 def mc_pi(n_samples):
@@ -551,7 +550,7 @@ def mc_pi(n_samples):
 
 <v-click>
 
-### NumPy Rewrite **(312ms)**:
+### NumPy Rewrite **(101ms)**:
 
 ```python
 def mc_pi_np(n_samples):
@@ -581,7 +580,7 @@ mc_pi_jit = jit()(mc_pi)
 %timeit mc_pi_jit(1_000_000)
 ```
 
-**256ms** (similar to NumPy)
+**125ms** (similar to NumPy)
 
 </v-click>
 
@@ -594,7 +593,7 @@ mc_pi_np_jit = jit()(mc_pi_np)
 %timeit mc_pi_jit(1_000_000)
 ```
 
-**406ms** (slower than NumPy)
+**150ms** (slower than NumPy)
 
 </v-click>
 
@@ -635,7 +634,7 @@ def naive_time_integral(pos_0, vel_0, dt, steps, acc=-9.81):
   return pos, vel, acc
 ```
 
-**3.03s**
+**2.46s**
 
 </v-click>
 
@@ -657,13 +656,13 @@ We can't rewrite this as a NumPy vectorised operation, as each `i` explicitly de
 time_integral_jit = numba.jit()(naive_time_integral)
 ```
 
-**71.6ms**
+**24.1ms**
 
 </v-click>
 
 <v-click>
 
-Once again, one change = **42x Speedup**
+Once again, one change = **~100x Speedup**
 
 <img src="../images/free-lunch.jpg" />
 
@@ -692,7 +691,7 @@ def naive_fibonacci(N):
         return naive_fibonacci(N-1) + naive_fibonacci(N-2)
 ```
 
-**14.5s** for the 40th Number
+**6.34s** for the 40th Number
 
 </v-click>
 
@@ -797,7 +796,7 @@ fibonacci_jit = numba.jit("int64(int64)")(naive_fibonacci)
 <v-click>
 
 Now, for performance we get:
-- **791ms** - That's **~18x speedup** 
+- **383ms** - That's **~17x speedup** 
 
 </v-click>
 

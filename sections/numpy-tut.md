@@ -140,8 +140,8 @@ def naive_mean(x_list):
 
 <v-click at=5>
 
-Time for 1,000,000 elements:
-- **352ms**
+Time for 10,000,000 elements:
+- **136ms**
 
 </v-click>
 
@@ -170,8 +170,8 @@ def np_mean(x_list):
 
 <v-click at=6>
 
-Time for 1,000,000 elements:
-- **423ms**
+Time for 10,000,000 elements:
+- **171ms**
 
 </v-click>
 
@@ -241,14 +241,14 @@ x_array = np.array(x_list)
 <v-click>
 
 The final performance comes in as:
-- Python For Loop (w/ Python List): **352ms**
-- NumPy Mean (w/ NumPy Array): **15.4ms**
+- Python For Loop (w/ Python List): **136ms**
+- NumPy Mean (w/ NumPy Array): **5.52ms**
 
 </v-click>
 
 <v-click>
 
-That's **~23x Speedup** - now that's what we want!
+That's **~25x Speedup** - now that's what we want!
 
 </v-click>
 
@@ -447,21 +447,21 @@ Kind of! If we do include the array creation:
 
 <v-click>
 
-### For Loop + List:
+### For Loop + List Creation:
 ```python
 %%timeit
 x_list = list(range(1_000_000))
 naive_mean(x_list)
 ```
 
-**636ms**
+**241ms**
 
 </v-click>
 
 
 <v-click>
 
-### NumPy + Array:
+### NumPy + Array Conversion:
 
 ```python
 %%timeit
@@ -470,7 +470,7 @@ x_array = np.array(x_list)
 np_mean(x_array)
 ```
 
-**731ms** - Still slower!
+**272ms** - Still slower!
 
 </v-click>
 
@@ -492,13 +492,13 @@ x_array = np.arange(1_000_000)
 np_mean(x_array)
 ```
 
-**42.4ms**
+**13.9ms**
 
 </v-click>
 
 <v-clicks>
 
-That puts our actual speedup at **~15x**
+That puts our actual speedup at **~17x**
 
 The more you operate on that array, the better your speed up will get!
 
@@ -546,7 +546,7 @@ def mc_pi(n_samples):
 <v-click at=9>
 
 Runtime:
-**4.32s**
+**4.06s**
 
 </v-click>
 
@@ -579,13 +579,13 @@ def mc_pi_np(n_samples):
 <v-click at=10>
 
 Runtime:
-**129ms**
+**99.7ms**
 
 </v-click>
 
 <v-click at=11>
 
-**Another ~33x Speedup!**
+**Another ~40x Speedup!**
 
 </v-click>
 

@@ -112,7 +112,7 @@ def np_sin2(x):
     return np.sin(x)**2
 ```
 
-**71.2ms**
+**66.8ms**
 
 <br>
 
@@ -122,7 +122,7 @@ def np_sin2(x):
 np_sin2_jit = jit()(np_sin2)
 ```
 
-**76.4ms** (very similar)
+**69.5ms** (very similar)
 
 <br>
 
@@ -139,9 +139,9 @@ It's as simple as adding the `parallel=True` flag
 np_sin2_jit = jit(parallel=True)(np_sin2)
 ```
 
-**22.6ms**
+**19.7ms** on 4 threads
 
-That's about a **3x Speedup**, once again for minimal effort!
+That's about a **3.4x Speedup**, once again for minimal effort!
 
 <br>
 
@@ -174,7 +174,7 @@ def python_sin2(x):
     return sin2
 ```
 
-**XXms**
+**6.32s**
 
 Once again, we apply `@numba.jit(parallel=True)`
 
@@ -193,7 +193,7 @@ def python_sin2(x):
     return sin2
 ```
 
-**XXms - XX Speedup**
+**20.1ms** on 4 threads - **~314x Speedup**
 
 We also have to swap our `range()` for a `numba.prange`
 
@@ -309,7 +309,7 @@ def safe_divide(x, y):
 
 We can take our ufunc and add `target="parallel"` to the `@vecotrize` decorator
 
-This takes us from **XXms**
+This takes us from **19.2ms**
 
 :: right ::
 
@@ -324,21 +324,12 @@ def safe_divide(x, y):
         return x / y
 ```
 
-To **XXms**
+To **29.7ms**
 
-Some more free performance!
+**That's actually slower!**
 
-<br>
+In some cases, thread overheads actually slow you down - yet another lesson in **measure, measure, measure**
 
-<SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
-
-*Pssst*, there's also a `target="CUDA"` option!
-
-<br>
-
-We don't have time for GPU stuff today but I'll let your imagine run wild on that!
-
-</SpeechBubble>
 
 ---
 layout: top-title-two-cols
@@ -389,9 +380,9 @@ Final performance rankings:
 
 | | **Python** | **NumPy** |
 |-|-|-|
-| No JIT | XXms | XXms |
-| `@jit` |XXms | XXms |
-| `@jit(parallel=True)` |XXms | XXms |
+| No JIT | 4.15s | 103ms |
+| `@jit` | 124ms | 147ms |
+| `@jit(parallel=True)` | **13ms** | **12.9ms** |
 
 Parallel version are joint winners! We beat NumPy at its own game!
 
@@ -407,8 +398,7 @@ columns: is-7
 
 :: left ::
 
-
-<img src="../images/mc-pi-bench-with-title.png" />
+<img src="../images/mc-bench-8threads.png" />
 
 Below the dotted line is a slow down from NumPy!
 
