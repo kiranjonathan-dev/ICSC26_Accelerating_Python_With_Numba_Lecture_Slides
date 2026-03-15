@@ -382,9 +382,9 @@ Final performance rankings:
 |-|-|-|
 | No JIT | 4.15s | 103ms |
 | `@jit` | 124ms | 147ms |
-| `@jit(parallel=True)` | **13ms** | **12.9ms** |
+| `@jit(parallel=True)` | ==**13ms**== | ==**12.9ms**== |
 
-Parallel version are joint winners! We beat NumPy at its own game!
+**Parallel versions are joint winners! We finally beat NumPy at its own game!**
 
 ---
 layout: top-title-two-cols
@@ -400,7 +400,7 @@ columns: is-7
 
 <img src="../images/mc-bench-8threads.png" />
 
-Below the dotted line is a slow down from NumPy!
+Below the dotted red line is slower than pure NumPy, above is faster!
 
 :: right ::
 
