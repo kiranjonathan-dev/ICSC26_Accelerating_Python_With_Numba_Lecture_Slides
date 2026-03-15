@@ -13,8 +13,15 @@ https://indico.cern.ch/event/1595114/contributions/6914179/
 Lecture 2:
 https://indico.cern.ch/event/1595114/contributions/6915161/
 
+## View The Slides On GitHub Pages
+
+The slides are hosted at the following link for viewing/downloading:
+
+https://kiranjonathan-dev.github.io/ICSC26_Accelerating_Python_With_Numba_Lecture_Slides/
+
 ## Exercise Repo
 
 If you'd like to access the associated exercises/Jupyter Notebooks, they can be accessed here:
 
 https://github.com/kiranjonathan-dev/ICSC26_Accelerating_Python_With_Numba_Exercise_Repo
+
