@@ -269,7 +269,7 @@ def slow_python_mean(array):
     return sum
 ```
 
-### 557s
+### 5.57s
 
 </v-click>
 
