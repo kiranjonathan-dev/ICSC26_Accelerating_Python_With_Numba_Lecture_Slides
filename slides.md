@@ -97,11 +97,11 @@ color: sky
 - They will be taking place in **513/1-024, CERN**
 - Full details are available on the Indico!
 
-### QR Code for exercises:
+### Exercise Repo (Link on Indico):
 
-INSERT QR CODE HERE
+<img src="../images/exercises_qr.png" width="40%" />
 
-You can also find the link on the Indico!
+<Link to="https://github.com/kiranjonathan-dev/ICSC26_Accelerating_Python_With_Numba_Exercise_Repo" title="Link to exercises" />
 
 :: right ::
 
