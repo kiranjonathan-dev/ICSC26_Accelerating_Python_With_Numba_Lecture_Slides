@@ -3,6 +3,33 @@ theme: neversink
 title: Speed without the pain - accelerating Python with Numba
 author: Kiran Jonathan
 hideInToc: true
+layout: top-title-two-cols
+color: sky
+---
+
+:: title ::
+
+## Follow Along With The Slides
+
+:: left ::
+
+### Scan this QR code to access the slides on github pages
+
+<br>
+
+### You can also find the link on the iCSC Indico
+
+<br>
+
+### Or just type it in:
+
+https://kiranjonathan-dev.github.io/ICSC26_Accelerating_Python_With_Numba_Lecture_Slides/
+
+:: right ::
+
+<img src="./images/slides_qr.png" width="80%" />
+
+---
 layout: cover
 color: sky
 ---
@@ -13,6 +40,7 @@ color: sky
 
 Kiran Jonathan (STFC Daresbury Laboratory, UK)
 <Email v="kiran.jonathan@stfc.ac.uk" color="orange" />
+
 
 ---
 src: ./sections/intro.md
