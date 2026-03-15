@@ -37,12 +37,20 @@ Some further reading/watching:
 
 <v-clicks>
 
-- Sten Astrand's iCSC2025 Talk "Under the Hood of the Snake: Behind the scenes of Python"
-- This Book on Python's internals
-- This very comprehensive NumPy tutorial
-- Numba's Amazing Documentation
-- Numba's Own List of Talks
-  - This One is My Personal Favourite
+- <Link to="https://indico.cern.ch/event/1468713/contributions/6275292/" title="Sten Astrand's iCSC2025 Talk 'Under the Hood of the Snake: Behind the scenes of Python'" />
+
+- <Link to="https://numpy.org/doc/stable/" title="The NumPy Documentation" />
+
+- <Link to="https://www.youtube.com/watch?v=lKcwuPnSHIQ" title="This very comprehensive NumPy tutorial" />
+
+- <Link to="https://numba.readthedocs.io/en/stable/" title="Numba's Amazing Documentation" />
+
+- <Link to="https://numba.readthedocs.io/en/stable/user/talks.html" title="Numba's Own List of Talks and Tutorials" />
+
+  - <Link to="https://www.youtube.com/watch?v=-4tD8kNHdXs" title="My Favourite Overview" />
+
+
+  - <Link to="https://www.youtube.com/watch?v=1AwG0T4gaO0" title="My Favourite Tutorial" />
 
 </v-clicks>
 
