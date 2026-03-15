@@ -17,18 +17,41 @@ columns: is-8
 
 :: left ::
 
+<v-click>
+
 So far, we've learnt how to optimise Python code with NumPy and Numba
 - We often find that their performance is quite similar
 - This makes sense, the compiled code ends up looking almost identical
 
+</v-click>
+
+<v-click>
+
 What happens if you follow every step in this talk, you profile your code, and it's still 80% a nice NumPy/Numba function?
+
+</v-click>
+
+<v-click>
+
 - Is it finally time to concede and break out the C++?
 
-**Absolutely not!**
+</v-click>
+
+<br>
+
+<v-click>
+
+### **Absolutely not!**
+
+</v-click>
 
 :: right ::
 
+<v-click at=4>
+
 <img src="../images/break-glass-parallel.jpg" />
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -41,6 +64,8 @@ columns: is-8
 ## Parallel Computing, Our Saviour
 
 :: left ::
+
+<v-clicks>
 
 We've been running optimised machine code, but only **serial code**:
 - **Serial** execution = perform each instruction **one after another**
@@ -55,11 +80,23 @@ That's where **parallel computing** comes in:
 - **Parallel** execution = perform instructions **at the same time**
 - Instead of 1 core doing all the work, you distribute it!
 
+</v-clicks>
+
 :: right ::
+
+<v-click at=3>
 
 <img src="../images/intel-i7.jpg" />
 
+
+</v-click>
+
+<v-click at=4>
+
+
 <img src="../images/nvidia-rtx.jpg" />
+
+</v-click>
 
 ---
 layout: top-title
@@ -72,14 +109,29 @@ color: indigo
 
 :: content ::
 
+<v-click>
+
 Numba was built with parallelism in mind, and provides a few ways you can go about it:
+
+</v-click>
+
+<v-clicks>
+
 - JIT compiling functions with `@jit(parallel=True)`
 - Using `@vectorize(target="parallel")` or even `@vectorize(target="cuda")`
 - Writing your own GPU kernels with Numba's CUDA support
   - This is really cool, and the only way you can write CUDA kernels in **pure python**
   - Sadly, we won't have time to get into this today
 
-But that doesn't mean we can't have some fun!
+</v-clicks>
+
+<br>
+
+<v-click>
+
+But that doesn't mean we can't still have some fun!
+
+</v-click>
 
 ---
 layout: side-title
@@ -105,6 +157,8 @@ color: indigo
 
 :: left ::
 
+<v-click>
+
 ### Nice, NumPy Vectorized Code
 
 ```python
@@ -114,7 +168,11 @@ def np_sin2(x):
 
 **66.8ms**
 
+</v-click>
+
 <br>
+
+<v-click>
 
 ### Serial JIT Version
 
@@ -124,12 +182,20 @@ np_sin2_jit = numba.jit()(np_sin2)
 
 **69.5ms** (very similar)
 
+</v-click>
+
 <br>
+
+<v-click>
 
 Luckily, Numba can parallelise a lot of NumPy's array operations, ufuncs, and other functions!
 
+</v-click>
+
 :: right ::
 
+
+<v-click>
 
 It's as simple as adding the `parallel=True` flag
 
@@ -139,17 +205,27 @@ It's as simple as adding the `parallel=True` flag
 np_sin2_jit = jit(parallel=True)(np_sin2)
 ```
 
+</v-click>
+
+<v-click>
+
 **19.7ms** on 4 threads
 
 That's about a **3.4x Speedup**, once again for minimal effort!
 
+</v-click>
+
 <br>
+
+<v-click>
 
 <SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
 
 **If** your data is big enough, parallelising NumPy code is **one of the few good reasons to JIT compile it**
 
 </SpeechBubble>
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -161,6 +237,8 @@ color: indigo
 ## Numba pranges - Your Own Parallel For Loops!
 
 :: left ::
+
+<v-click>
 
 ### Naive Python For Loop
 
@@ -176,9 +254,17 @@ def python_sin2(x):
 
 **6.32s**
 
+</v-click>
+
+<v-click>
+
 Once again, we apply `@numba.jit(parallel=True)`
 
+</v-click>
+
 :: right ::
+
+<v-click>
 
 ### Numba Parallel `prange`
 
@@ -195,10 +281,16 @@ def python_sin2(x):
 
 **20.1ms** on 4 threads - **~314x Speedup**
 
+</v-click>
+
+<v-click>
+
 We also have to swap our `range()` for a `numba.prange`
 
 - This tells Numba that the loop is safe to parallelise
 - It then divides the range across the threads for computation!
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -211,10 +303,25 @@ color: indigo
 
 :: left ::
 
+<v-click>
+
 Sadly, we haven't had time to go over parallel theory
+
+</v-click>
+
+<v-click>
+
 - That's its own lecture series!
 
+</v-click>
+
+<v-click>
+
 **One thing I have to warn you about though is race conditions!**
+
+</v-click>
+
+<v-click>
 
 Take this code here:
 
@@ -227,13 +334,26 @@ def race_array():
   return array[0]
 ```
 
+</v-click>
+
+<v-click>
+
 It's incredibly dangerous, and can give you **hard to reproduce, annoying bugs!**
 
 That's because it includes a **race condition**
 
+</v-click>
+
 :: right ::
 
+<v-click>
+
 The simple instruction `array[0] += 5`
+
+</v-click>
+
+
+<v-click>
 
 Looks more like:
 ```sh
@@ -242,13 +362,23 @@ add array[0],5
 write array[0]
 ```
 
-If multiple threads do this on the same element, at the same time, they may happen out of order and give you different answers!
+</v-click>
+
+<v-click>
+
+**If multiple threads do this on the same element, at the same time, they may happen out of order and give you different answers!**
+
+</v-click>
 
 <br>
+
+<v-click>
 
 ### Golden rule for race conditions:
 
 **Separate iterations of a `prange` should never access the same array element!**
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -261,6 +391,8 @@ color: indigo
 
 :: left ::
 
+<v-click>
+
 Take a function like this:
 
 ```python
@@ -272,18 +404,37 @@ def simple_reduction(array):
   return sum
 ```
 
+</v-click>
+
+<v-click>
+
 Naively, each thread accumulating into `sum` should create a race condition!
+
+</v-click>
 
 :: right ::
 
+<v-click>
+
 Luckily, Numba handle's common reductions for us:
+
+</v-click>
+
+<v-clicks>
+
 - It can see you're reducing into a scalar
 - Each thread will store its own copy
 - They'll be combined at the end in a thread-safe manner
 
+</v-clicks>
+
 <br>
 
+<v-click>
+
 <Link to="https://numba.readthedocs.io/en/stable/user/parallel.html#explicit-parallel-loops" title="You can find out exactly what operations are/aren't supported in Numba's docs!" />
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -296,6 +447,8 @@ color: indigo
 
 :: left ::
 
+<v-click>
+
 ### Original ufunc
 
 ```python
@@ -307,11 +460,23 @@ def safe_divide(x, y):
         return x / y
 ```
 
+</v-click>
+
+<v-click>
+
 We can take our ufunc and add `target="parallel"` to the `@vecotrize` decorator
+
+</v-click>
+
+<v-click at=4>
 
 This takes us from **19.2ms**
 
+</v-click>
+
 :: right ::
+
+<v-click>
 
 ### Parallel ufunc!
 
@@ -324,11 +489,21 @@ def safe_divide(x, y):
         return x / y
 ```
 
+</v-click>
+
+<v-click at=5>
+
 To **29.7ms**
+
+</v-click>
+
+<v-click at=6>
 
 **That's actually slower!**
 
 In some cases, thread overheads actually slow you down - yet another lesson in **measure, measure, measure**
+
+</v-click>
 
 
 ---
@@ -343,8 +518,13 @@ color: indigo
 :: left ::
 
 
+<v-click>
+
 Previously we had two implementations:
 
+</v-click>
+
+<v-click>
 
 ### Naive Python:
 
@@ -359,6 +539,10 @@ def mc_pi(n_samples):
     return 4 * n_samples_inside / n_samples
 ```
 
+</v-click>
+
+<v-click>
+
 ### NumPy Rewrite:
 
 ```python
@@ -370,11 +554,19 @@ def mc_pi_np(n_samples):
     return 4 * n_samples_inside / n_samples
 ```
 
+</v-click>
+
 :: right ::
+
+<v-click>
 
 Both of these work with `@jit(parallel=True)`!
 
 The naive Python version just needs a `prange` added!
+
+</v-click>
+
+<v-click>
 
 Final performance rankings:
 
@@ -384,7 +576,13 @@ Final performance rankings:
 | `@jit` | 124ms | 147ms |
 | `@jit(parallel=True)` | ==**13ms**== | ==**12.9ms**== |
 
+</v-click>
+
+<v-click>
+
 **Parallel versions are joint winners! We finally beat NumPy at its own game!**
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -398,20 +596,36 @@ columns: is-7
 
 :: left ::
 
+<v-click>
+
 <img src="../images/mc-bench-8threads.png" />
 
 Below the dotted red line is slower than pure NumPy, above is faster!
 
+</v-click>
+
 :: right ::
 
+<v-click>
+
 Some observations:
+
+</v-click>
+
+<v-clicks>
 
 - **Problem size matters, always measure!**
 - Make sure your performance tests are representative of your use case!
 - Simple `@jit` is best for small problems
 - `parallel=True` shines for large problems
 
+</v-clicks>
+
+<v-click>
+
 Why is `parallel=True` with 1 thread always faster than NumPy? A normal `@jit` (which also uses 1 thread) isn't?
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -424,29 +638,56 @@ color: indigo
 
 :: left ::
 
+<v-click>
+
 Numba's parallel version with 1 thread is faster than Numba's simple `@numba.jit`, because it is compiled differently:
+
+</v-click>
+
+<v-clicks>
+
 - Functions with `parallel=True` go through Numba's **additional optimisation step**
 - This includes extra compiler optimisations, e.g.:
   - **Loop Fusion!**
+
+
+</v-clicks>
+
+
+<v-click>
 
 Our NumPy Monte Carlo had lots of easy gains:
 - 5 duplicated loops!
 - 4 intermediate arrays that could just be loops!
 
+</v-click>
+
+<v-click>
+
 **The optimisation saves on memory and runtime!**
 
+</v-click>
+
 :: right ::
+
+<v-click>
 
 We can ask Numba for some info on its optimisation:
 ```python
 mc_pi_np_jit_par.parallel_diagnostics(level=1)
 ```
 
-<br>
+</v-click>
+
+<v-click>
 
 At level 1 (least verbose), you'll get:
 
 <img src="../images/parallel-diagnostics.png" />
+
+We can see that it manages to fuse all loops/array operations!
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -460,7 +701,13 @@ columns: is-5
 
 :: left ::
 
+<v-click>
+
 ### Performance
+
+</v-click>
+
+<v-clicks>
 
 - The jump from NumPy to `@jit(parallel=True)` is modest, and never more than your CPU count!
 - The real gains come going from Python to serial NumPy/Numba!
@@ -468,18 +715,28 @@ columns: is-5
   - Make sure you **measure**
   - **And make sure you measure with different thread counts/problem sizes!**
 
+</v-clicks>
+
 :: right ::
 
+<v-click>
+
 ### Safety
+
+</v-click>
+
+<v-clicks>
 
 - We didn't have time for parallel theory
   - I feel like I've given you a weapon without a safety!
 - **If you've done parallel computing before:**
   - <Link to="https://numba.readthedocs.io/en/stable/user/parallel.html" title="Numba's docs have the details you need" />
 - **If you haven't:**
-  - Be careful, parallel bugs are the worst as they don't always happen
+  - Be careful, parallel bugs are the worst as they don't **always** happen
   - For safety, stick to parallelising NumPy functions, loops only over `array[i]`, and simple reductions!
 - **Make sure you test your code!**
+
+</v-clicks>
 
 ---
 layout: side-title
@@ -492,7 +749,13 @@ color: indigo
 
 :: content ::
 
+<v-click>
+
 In this section we have learnt:
+
+</v-click>
+
+<v-clicks>
 
 - Numba supports parallelism in many different ways:
   - With `@jit(parallel=True)`
@@ -504,3 +767,6 @@ In this section we have learnt:
   - Perform simple reductions automatically
 - But, we should only resort to parallelism when we **absolutely need it**
 - As always, **measure and test!**
+
+</v-clicks>
+
