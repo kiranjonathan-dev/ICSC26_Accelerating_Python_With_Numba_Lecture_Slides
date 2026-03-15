@@ -107,26 +107,55 @@ columns: is-7
 
 :: left ::
 
+<v-click>
+
 ### What is Just-In-Time (JIT) Compilation?
+
+</v-click>
+
+<v-click>
 
 - Previously, we talked about **Ahead-Of-Time (AOT) compilation**
   - The **whole program** is compiled before running
+
+</v-click>
+
+<v-click>
+
 - **Just-In-Time Compilation** is quite different:
   - Code is only compiled **when it's needed**
+  
+</v-click>
+<v-click>
+
   - Since this happens during runtime, the compiler gets extra information:
     - What types you're calling a function with
     - The CPU/hardware you're using
     - It essentially has **all** the info
 
+</v-click>
+
 :: right ::
 
+<v-click>
+
 ### Why only a subset of Python/NumPy?
+
+</v-click>
+
+<v-clicks>
 
 - Python as a whole is basically too dynamic to compile
 - For science, the maths tends to be the slowest part
 - Maths functions are often small, with mostly static types (`float`, `int`, etc...)
 
+</v-clicks>
+
+<v-click>
+
 If we focus on compiling these parts of Python, it'll be easier and we can still get good speedup **(remember - prioritise!)**
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -333,7 +362,7 @@ color: cyan
 
 :: left ::
 
-<v-click>
+<v-click at=2>
 
 ### Directly on Function
 
@@ -353,7 +382,7 @@ def sum_first_N_integers_jit(N):
 
 :: right ::
 
-<v-click>
+<v-click at=3>
 
 ### From Another Function
 
@@ -375,7 +404,11 @@ sum_first_N_integers_jit = numba.jit()(sum_first_N_integers)
 
 :: default ::
 
+<v-click at=1>
+
 **There are also multiple ways to apply decorators in Python**
+
+</v-click>
 
 ---
 layout: top-title-two-cols
@@ -438,8 +471,8 @@ This is the **"JIT-Tax"**:
 - For small functions/small inputs, the JIT-Tax can slow you down!
 - **Do not put `@numba.jit` on all of your functions, **measure** and use it selectively!**
 - **JIT works best for:**
-  - Functions which are slow enough to eat the JIT-Tax
-  - Slow functions which you call many times in your program (JIT-Tax only strikes once!)
+  - Functions slow enough to eat the JIT-Tax
+  - Functions called many times (JIT-Tax only strikes once!)
   - Don't trust these rules of thumb though, **measure!**
 
 </v-clicks>
@@ -576,8 +609,8 @@ How does Numba compare?
 ### Naive Python JIT'ed
 
 ```python
-mc_pi_jit = jit()(mc_pi)
-%timeit mc_pi_jit(1_000_000)
+mc_pi_jit = numba.jit()(mc_pi)
+%timeit mc_pi_jit(10_000_000)
 ```
 
 **125ms** (similar to NumPy)
@@ -589,8 +622,8 @@ mc_pi_jit = jit()(mc_pi)
 ### NumPy JIT'ed
 
 ```python
-mc_pi_np_jit = jit()(mc_pi_np)
-%timeit mc_pi_jit(1_000_000)
+mc_pi_np_jit = numba.jit()(mc_pi_np)
+%timeit mc_pi_jit(10_000_000)
 ```
 
 **150ms** (slower than NumPy)
@@ -835,13 +868,23 @@ color: cyan
 
 :: left ::
 
+<v-click>
+
 While we're on the topic of typing:
 - Numba is quite good at guessing types
 - But types actually need to be guessable
 
+</v-click>
+
+<v-click>
+
 At the end of the day, Numba is **statically typed** like C/C++
 - Variables should not change types in your functions
 - You should always return the same type
+
+</v-click>
+
+<v-click at=5>
 
 <SpeechBubble position="l" color="sky" shape="round" maxWidth="100%">
 
@@ -851,12 +894,16 @@ Bonus typing tip, you can check Numba's inference with:
 
 </SpeechBubble>
 
+</v-click>
+
 :: right ::
+
+<v-click>
 
 Different return types like this:
 
 ```python
-@jit
+@numba.jit
 def different_returns(x):
     if x < 0:
         return "Oh no, negative!" # string
@@ -866,6 +913,10 @@ def different_returns(x):
 different_returns(-1)
 ```
 
+</v-click>
+
+<v-click>
+
 Will give an error like this:
 ```console
 TypingError: Failed in nopython mode 
@@ -873,6 +924,8 @@ pipeline (step: nopython frontend)
 Can't unify return type from the following types: 
 Literal[str](Oh no, negative!), float64
 ```
+
+</v-click>
 
 
 ---
