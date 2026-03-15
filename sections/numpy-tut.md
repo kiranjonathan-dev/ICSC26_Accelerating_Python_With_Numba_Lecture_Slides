@@ -280,6 +280,7 @@ columns: is-4
 x_list = [1, 2.4, 3, 7] 
 
 x_list.append("Hello") # Fine and cheap
+# Happens in-place (no new list)
 ```
 
 </v-click>
@@ -308,8 +309,8 @@ x_array = np.array([1,2.4,3,7])
 x_array = np.array(x_list)
 # x_array = [1.  2.4 3.  7. ] (NumPy chose float)
 
-x_array = np.append(x_array, 'Hello') # Expensive!
-# Now x_array = ["1", "2.4", "3", "7", "Hello"] (all strings!)
+y_array = np.append(x_array, 'Hello') # Expensive! Creates new array!
+# Now y_array = ["1", "2.4", "3", "7", "Hello"] (Now all strings!)
 ```
 
 </v-click>
