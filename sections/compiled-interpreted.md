@@ -255,7 +255,7 @@ Compilers can perform all kinds of optimisations, including:
 - Loop optimisations
 - Memory and cache optimisations
 - Control flow and function optimisations
-- <Link to="compiler-optimisations" title="So, so much more" />
+- <Link to="https://en.wikipedia.org/wiki/Optimizing_compiler" title="So, so much more" />
 
 </v-click>
 

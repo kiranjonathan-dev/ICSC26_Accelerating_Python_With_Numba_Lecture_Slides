@@ -141,6 +141,3 @@ color: sky
   - <Email v="kiran.jonathan@stfc.ac.uk" color="sky"/>
   - I might not reply until after the school though!
 
----
-src: ./sections/back-up.md
----
