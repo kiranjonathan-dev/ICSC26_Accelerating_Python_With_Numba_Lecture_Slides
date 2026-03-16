@@ -118,7 +118,7 @@ Numba was built with parallelism in mind, and provides a few ways you can go abo
 <v-clicks>
 
 - Thread-based parallelism for CPUs (**Real threads**, not Python threads - no GIL!)
-  - SIMT (Single Instruction Multiple Threads) parallelism is similar to SIMD, but work is shared across multiple threads (across multiple CPU cores)
+  - CPU threaded parallelism is similar to SIMD, but work is shared across multiple threads (across multiple CPU cores)
   - Each thread can still do SIMD vectorised operations (So basically parallel$^2$)
   - It's simple to use too:
     - JIT compiling functions with `@jit(parallel=True)`
@@ -258,6 +258,14 @@ Once again, we apply `@numba.jit(parallel=True)`
 
 </v-click>
 
+<v-click at=3>
+
+We also have to swap our `range()` for a `numba.prange`
+
+- This tells Numba to spread the iterations across threads
+
+</v-click>
+
 :: right ::
 
 <v-click>
@@ -279,15 +287,19 @@ def python_sin2(x):
 
 </v-click>
 
-<v-click>
+<v-click at=4>
 
-We also have to swap our `range()` for a `numba.prange`
+### Example Work Division (len(x)=100)
 
-- This tells Numba that the loop is safe to parallelise
-- It then divides the range across the threads for computation!
+```sh
+Thread 0 → iterations 0–24 
+Thread 1 → iterations 25–49
+Thread 2 → iterations 50–74
+Thread 3 → iterations 75–99
+# Each thread can do its work in SIMD as well!
+```
 
 </v-click>
-
 ---
 layout: top-title-two-cols
 color: indigo
@@ -325,7 +337,7 @@ Take this code here:
 @numba.jit(parallel=True)
 def race_array():
   array = np.zeros(100)
-  for i in prange(len(array)):
+  for i in numba.prange(len(array)):
       array[0] += 1 # Multiple loop iterations modify array[0]
   return array[0]
 ```
@@ -602,6 +614,19 @@ Below the dotted red line is slower than pure NumPy, above is faster!
 
 :: right ::
 
+
+<v-click>
+
+<SpeechBubble position="r" color="sky" shape="round" maxWidth="100%">
+
+You can set the thread count with `numba.set_num_threads()`
+
+</SpeechBubble>
+
+</v-click>
+
+<br>
+
 <v-click>
 
 Some observations:
@@ -612,8 +637,6 @@ Some observations:
 
 - **Problem size matters, always measure!**
 - Make sure your performance tests are representative of your use case!
-- Simple `@jit` is best for small problems
-- `parallel=True` shines for large problems
 
 </v-clicks>
 
@@ -622,6 +645,7 @@ Some observations:
 Why is `parallel=True` with 1 thread always faster than NumPy? A normal `@jit` (which also uses 1 thread) isn't?
 
 </v-click>
+
 
 ---
 layout: top-title-two-cols
@@ -653,7 +677,7 @@ Numba's parallel version with 1 thread is faster than Numba's simple `@numba.jit
 <v-click>
 
 Our NumPy Monte Carlo had lots of easy gains:
-- 5 duplicated loops!
+- 5 duplicated loops (separate array operations)!
 - 4 intermediate arrays that could just be loops!
 
 </v-click>
