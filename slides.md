@@ -41,6 +41,37 @@ color: sky
 Kiran Jonathan (STFC Daresbury Laboratory, UK)
 <Email v="kiran.jonathan@stfc.ac.uk" color="orange" />
 
+---
+layout: top-title-two-cols
+color: sky
+columns: is-7
+---
+
+:: title ::
+
+## About Me
+
+:: left ::
+
+<v-clicks>
+
+### Kiran Jonathan (He/Him)
+
+#### Attended CSC 2025 @ Lund
+
+- Undergrad in Physics w/ Theoretical Physics @ University of Manchester
+- Just finished 2-year Scientific Computing Graduate Scheme @ STFC (UK)
+- Work in plasma/accelerator simulations (particle-in-cell) on HPC
+  - One of the unlucky Fortran users
+- Starting a part-time PhD w/ University of Strathclyde in April
+
+**I am a physicist, not a computer scientist, so please take it easy on me!**
+
+</v-clicks>
+
+:: right ::
+
+<img src="./images/Headshot - Jonathan, Kiran.jpg" />
 
 ---
 src: ./sections/intro.md
