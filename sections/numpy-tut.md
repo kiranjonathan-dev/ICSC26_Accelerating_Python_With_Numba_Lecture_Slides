@@ -505,9 +505,62 @@ The more you operate on that array, the better your speed up will get!
 
 Also, if you're loading data from files most libraries use NumPy arrays already!
 
-<Link to="numpy-inits" title="More Examples of NumPy Array Initialisations Here" />
+<Link to="https://numpy.org/doc/stable/user/basics.creation.html#intrinsic-numpy-array-creation-functions" title="More Examples of NumPy Array Initialisations Here" />
 
 </v-clicks>
+
+---
+layout: top-title-two-cols
+color: yellow
+---
+
+:: title ::
+
+## Rule 4: Don't Use np.append() - Allocate Up Front!
+
+:: left ::
+
+If you're used to writing Python code, you might be used to looping and using `list.append(element)` to create an array.
+
+You might be tempted to write code that looks like this:
+
+```python
+%%timeit
+x_array = np.array([])
+# Expensive For Loop!
+for i in range(100_000): 
+  # Expensive Append Each Iteration!
+  x_array = np.append(x_array, 5 * i) 
+```
+
+**1.11s - So slow!**
+
+Here's a new rule:
+
+**I really don't want to see np.append() every loop of an iteration!**
+
+:: right ::
+
+Something like this is a bit less offensive, but still uses a Python For Loop:
+
+```python
+%%timeit
+x_array = np.empty(100_000)
+# Only Expensive For Loop!
+for i in range(len(x_array)): 
+  x_array[i] = 5 * i
+```
+
+**5.46ms ~200x Speedup from appending**
+
+As we saw before, make use of NumPy's built-in intialisations!
+
+```python
+%%timeit
+x_array = 5 * np.arange(100_000) # Ideal!
+```
+
+**45.6μs ~24,300x Speedup from appending!**
 
 ---
 layout: top-title-two-cols
