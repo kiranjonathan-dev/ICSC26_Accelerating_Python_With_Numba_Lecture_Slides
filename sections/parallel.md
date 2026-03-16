@@ -117,21 +117,17 @@ Numba was built with parallelism in mind, and provides a few ways you can go abo
 
 <v-clicks>
 
-- JIT compiling functions with `@jit(parallel=True)`
-- Using `@vectorize(target="parallel")` or even `@vectorize(target="cuda")`
-- Writing your own GPU kernels with Numba's CUDA support
+- **OS** Thread-based parallelism for CPUs (not Python threads - no GIL!)
+  - Thread-based parallelism is SIMD where work is shared across multiple threads ($\approx$ CPU cores)
+    - Since each thread can still do SIMD vector operations, you can think of Numba as SIMD$^2$
+  - It's simple to use too:
+    - JIT compiling functions with `@jit(parallel=True)`
+    - Using `@vectorize(target="parallel")`
+- You can also write GPU kernels with Numba's CUDA support
   - This is really cool, and the only way you can write CUDA kernels in **pure python**
   - Sadly, we won't have time to get into this today
 
 </v-clicks>
-
-<br>
-
-<v-click>
-
-But that doesn't mean we can't still have some fun!
-
-</v-click>
 
 ---
 layout: side-title
