@@ -520,9 +520,15 @@ color: yellow
 
 :: left ::
 
+<v-click>
+
 If you're used to writing Python code, you might be used to looping and using `list.append(element)` to create an array.
 
 You might be tempted to write code that looks like this:
+
+</v-click>
+
+<v-click>
 
 ```python
 %%timeit
@@ -535,11 +541,19 @@ for i in range(100_000):
 
 **1.11s - So slow!**
 
+</v-click>
+
+<v-click>
+
 Here's a new rule:
 
-**I really don't want to see np.append() every loop of an iteration!**
+**We don't use `np.append()` every iteration of a loop!**
+
+</v-click>
 
 :: right ::
+
+<v-click>
 
 Something like this is a bit less offensive, but still uses a Python For Loop:
 
@@ -553,6 +567,10 @@ for i in range(len(x_array)):
 
 **5.46ms ~200x Speedup from appending**
 
+</v-click>
+
+<v-click>
+
 As we saw before, make use of NumPy's built-in intialisations!
 
 ```python
@@ -561,6 +579,8 @@ x_array = 5 * np.arange(100_000) # Ideal!
 ```
 
 **45.6μs ~24,300x Speedup from appending!**
+
+</v-click>
 
 ---
 layout: top-title-two-cols
