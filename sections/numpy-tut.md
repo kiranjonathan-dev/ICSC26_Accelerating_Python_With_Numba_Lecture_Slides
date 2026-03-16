@@ -296,6 +296,11 @@ But how?
 
 </v-clicks>
 
+<v-click at=9>
+
+**NumPy can't operate on a List!**
+
+</v-click>
 
 :: right ::
 
@@ -328,11 +333,6 @@ This comes at a cost:
 
 </v-clicks>
 
-<v-click at=9>
-
-**They're so different that NumPy has to convert your list to an array to operate on it! This slows NumPy down!**
-
-</v-click>
 ---
 layout: top-title-two-cols
 color: yellow
@@ -398,7 +398,7 @@ Python For Loops operate one element at a time:
 1+9 # Cycle 1
 2+10 # Cycle 2
 ...
-8+16 # Cycle 1=8
+8+16 # Cycle 8
 # 8 CPU Cycles Total
 ```
 

@@ -129,7 +129,7 @@ columns: is-7
 <v-click>
 
   - Since this happens during runtime, the compiler gets extra information:
-    - What types you're calling a function with
+    - Which types you're calling a function with
     - The CPU/hardware you're using
     - It essentially has **all** the info
 
@@ -177,6 +177,8 @@ columns: is-7
 <br>
 
 <img src="../images/numba-diagram.png" />
+
+"IR" = Intermediate Representation
 
 </v-click>
 
@@ -305,6 +307,8 @@ Simply import numba and add `@numba.jit`
 ### Fast Numba JIT Loop
 
 ```python
+import numba
+
 @numba.jit
 def sum_first_N_integers_jit(N):
     sum = 0
