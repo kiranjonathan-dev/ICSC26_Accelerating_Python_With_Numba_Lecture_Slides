@@ -117,9 +117,9 @@ Numba was built with parallelism in mind, and provides a few ways you can go abo
 
 <v-clicks>
 
-- **OS** Thread-based parallelism for CPUs (not Python threads - no GIL!)
-  - Thread-based parallelism is SIMD where work is shared across multiple threads ($\approx$ CPU cores)
-    - Since each thread can still do SIMD vector operations, you can think of Numba as SIMD$^2$
+- Thread-based parallelism for CPUs (**Real threads**, not Python threads - no GIL!)
+  - SIMT (Single Instruction Multiple Threads) parallelism is similar to SIMD, but work is shared across multiple threads (across multiple CPU cores)
+  - Each thread can still do SIMD vectorised operations (So basically parallel$^2$)
   - It's simple to use too:
     - JIT compiling functions with `@jit(parallel=True)`
     - Using `@vectorize(target="parallel")`
