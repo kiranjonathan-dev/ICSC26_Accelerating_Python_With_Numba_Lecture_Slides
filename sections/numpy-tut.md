@@ -296,7 +296,7 @@ But how?
 
 </v-clicks>
 
-<v-click at=9>
+<v-click at=10>
 
 **NumPy can't operate on a List!**
 
