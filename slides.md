@@ -32,6 +32,7 @@ https://kiranjonathan-dev.github.io/ICSC26_Accelerating_Python_With_Numba_Lectur
 ---
 layout: cover
 color: sky
+hideInToc: true
 ---
 
 # Speed Without the Pain: Accelerating Python With Numba
