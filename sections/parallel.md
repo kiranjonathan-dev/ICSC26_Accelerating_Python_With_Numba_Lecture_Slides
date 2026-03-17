@@ -472,7 +472,7 @@ def safe_divide(x, y):
 
 <v-click>
 
-We can take our ufunc and add `target="parallel"` to the `@vecotrize` decorator
+We can take our ufunc and add `target="parallel"` to the `@vectorize` decorator
 
 </v-click>
 
