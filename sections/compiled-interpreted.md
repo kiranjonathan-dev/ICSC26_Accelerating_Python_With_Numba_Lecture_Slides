@@ -319,14 +319,6 @@ Less overhead for executing loops **(faster!)**
 
 </v-click>
 
-:: default ::
-
-<v-click>
-
-<Link to="compiler-optimisations" title="More examples are available in the backup slides" />
-
-</v-click>
-
 ---
 layout: side-title
 color: orange
