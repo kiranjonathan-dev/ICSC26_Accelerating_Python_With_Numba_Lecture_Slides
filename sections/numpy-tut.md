@@ -209,7 +209,7 @@ x_list = list(range(1_000_000))
 
 <v-click>
 
-Since `np_mean` is slower, and the NumPy For Loop is written in C++, does that mean Python For Loops are faster than C++?
+Since `np_mean` is slower, and the NumPy For Loop is written in C, does that mean Python For Loops are faster than C's?
 
 </v-click>
 
@@ -323,7 +323,7 @@ y_array = np.append(x_array, 'Hello') # Expensive! Creates new array!
 <v-clicks>
 
 Designed for performance:
-- NumPy stores it as a strongly-typed, contiguous C-style array
+- NumPy stores it as a statically-typed, contiguous C-style array
 
 This comes at a cost:
 - Can only store one datatype (you choose or NumPy guesses)

@@ -557,13 +557,13 @@ Languages often come in two main varieties:
 
 <v-click>
 
-Compiled languages like C/C++, Fortran, and Rust will often use **strong, static** typing
+**Compiled languages** like C/C++, Fortran, and Rust will often use **static** typing
 
 </v-click>
 
 <v-click>
 
-**Interpreted languages** like Python will often use weak, dynamic typing
+**Interpreted languages** like Python will often use **dynamic** typing
 
 </v-click>
 
@@ -581,11 +581,11 @@ Dynamic typing can introduce lots of overheads. To compute even a simple `x+y`, 
 
 <v-click at=2>
 
-### Strong, Static Typing (C++):
+### Static Typing (C++):
 
 ```c++
-int x = 5; // Have to specify type (strong)
-x = "Hello"; // INVALID C++! Can't change type (static)
+int x = 5; 
+x = "Hello"; // INVALID C++! Can't change type 
 ```
 
 </v-click>
@@ -594,10 +594,10 @@ x = "Hello"; // INVALID C++! Can't change type (static)
 
 <v-click at=3>
 
-### Weak, Dynamic typing (Python):
+### Dynamic typing (Python):
 ```python
-x = 5 # Don't need to specify type (weak)
-x = "Hello" # Perfectly fine to change! (dynamic)
+x = 5 
+x = "Hello" # Perfectly fine to change! 
 ```
 
 </v-click>
