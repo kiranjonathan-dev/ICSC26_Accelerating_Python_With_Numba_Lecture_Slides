@@ -198,7 +198,7 @@ It's as simple as adding the `parallel=True` flag
 ### Parallel JIT Version
 
 ```python
-np_sin2_jit = jit(parallel=True)(np_sin2)
+np_sin2_jit = numba.jit(parallel=True)(np_sin2)
 ```
 
 </v-click>
